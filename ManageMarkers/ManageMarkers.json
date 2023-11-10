@@ -1,0 +1,18 @@
+{
+    "Author": "zbee",
+    "Name": "just manage markers",
+    "Punchline": "A tool for making simple changes to waymarks.",
+    "Description": "This plugin requires the `Waymark Preset Plugin`.\n\nIn this toolboox are the following utilities to make setting up and managing others' waymarks easier.\n- Swapping positions of individual marks\n- Swapping positions of letter and number marks\n- ",
+    "InternalName": "ManageMarkers",
+    "ApplicableVersion": "any",
+    "RepoUrl": "https://github.com/zbee/manage_markers",
+    "IconUrl": "https://github.com/zbee/manage_markers/raw/master/Data/icon.png",
+    "Tags": [
+        "Waymark",
+        "Waymarks",
+        "Marker",
+        "Markers",
+        "Toolbox",
+        "Tool"
+    ]
+}
