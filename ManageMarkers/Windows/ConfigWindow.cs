@@ -10,21 +10,11 @@ public class ConfigWindow : Window, IDisposable
     public int waymarkOne;
     public int waymarkTwo = 4;
 
-    public static readonly String[] markers = new String[8]
-    {
-        "A",
-        "B",
-        "C",
-        "D",
-        "One",
-        "Two",
-        "Three",
-        "Four"
-    };
+    public static readonly String[] markers = Markers.Strings;
 
     private Configuration Configuration;
 
-    public ConfigWindow(Plugin plugin) : base(
+    public ConfigWindow(ManageMarkers plugin) : base(
         "A Wonderful Configuration Window",
         ImGuiWindowFlags.NoResize |
         ImGuiWindowFlags.NoCollapse |

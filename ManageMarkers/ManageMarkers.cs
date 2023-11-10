@@ -9,12 +9,12 @@ using ManageMarkers.Windows;
 
 namespace ManageMarkers
 {
-    public sealed class Plugin : IDalamudPlugin
+    public sealed class ManageMarkers : IDalamudPlugin
     {
         public string Name => "just manage markers";
 
         private DalamudPluginInterface PluginInterface { get; init; }
-        private ICommandManager CommandManager { get; init; }
+        private readonly PluginCommandManager<ManageMarkers> commandManager;
         private IPluginLog log { get; init; }
         public Configuration Configuration { get; init; }
         public WindowSystem WindowSystem = new("ManageMarkers");
@@ -22,16 +22,37 @@ namespace ManageMarkers
         private ConfigWindow ConfigWindow { get; init; }
         private MainWindow MainWindow { get; init; }
 
-        [Command("/just")]
-        [HelpMessage("Use /just manage markers to open the main window.")]
+        [Command("/justmarkers")]
+        [HelpMessage(
+            "Open the main window" +
+            "\n/justmarkers config \u2192 Open the config window" +
+            "\n " +
+            "\n/justmarkers help [chat] \u2192 Open the help window, or print it in chat" +
+            "\n/justmarkers advanced help [chat] \u2192 Open the advanced help window, or print it in chat" +
+            ""
+        )]
         public void justManageMarkers(string command, string args)
         {
-            this.log.Info(args);
-            this.log.Info("Message sent successfully.");
+            this.log.Info("/jmm used");
+
             MainWindow.IsOpen = true;
         }
 
-        public Plugin(
+        public void justSwap(string command, string args)
+        {
+            this.log.Info("/markerswap used");
+
+            // Short circuit help message
+            if (args.Trim() == "")
+            {
+                this.log.Info("no args");
+                return;
+            }
+
+            string[] markers = Markers.findMarkersIn(args);
+        }
+
+        public ManageMarkers(
             [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
             [RequiredVersion("1.0")] ICommandManager commandManager,
             [RequiredVersion("1.0")] IPluginLog log
@@ -39,7 +60,9 @@ namespace ManageMarkers
         {
             this.log = log;
             this.PluginInterface = pluginInterface;
-            this.CommandManager = commandManager;
+
+            // Load all of our commands
+            this.commandManager = new PluginCommandManager<ManageMarkers>(this, commandManager);
 
             this.Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             this.Configuration.Initialize(this.PluginInterface);
@@ -72,12 +95,7 @@ namespace ManageMarkers
 
             ConfigWindow.Dispose();
             MainWindow.Dispose();
-
-            var commands = CommandManager.Commands;
-            foreach (var (key, value) in commands)
-            {
-                this.log.Debug("key: " + key + ", value: " + value);
-            }
+            commandManager.Dispose();
         }
     }
 }
