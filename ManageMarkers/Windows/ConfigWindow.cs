@@ -15,38 +15,11 @@ public class ConfigWindow : Window, IDisposable
     private Configuration Configuration;
 
     public ConfigWindow(ManageMarkers plugin) : base(
-        "A Wonderful Configuration Window",
-        ImGuiWindowFlags.NoResize |
-        ImGuiWindowFlags.NoCollapse |
-        ImGuiWindowFlags.NoScrollbar |
-        ImGuiWindowFlags.NoScrollWithMouse
+        plugin.Name + ": preferences",
+        ImGuiWindowFlags.AlwaysAutoResize
     )
     {
-        this.Size = new Vector2(232, 75);
-        this.SizeCondition = ImGuiCond.Always;
-
         this.Configuration = plugin.Configuration;
-
-        ImGui.Begin("MarkerMod");
-
-        if (ImGui.BeginTabBar("MarkerModTabs"))
-        {
-            if (ImGui.BeginTabItem("Modifications"))
-            {
-                drawMods();
-                ImGui.EndTabItem();
-            }
-
-            if (ImGui.BeginTabItem("Preferences"))
-            {
-                //DrawPreferences();
-                ImGui.EndTabItem();
-            }
-
-            ImGui.EndTabBar();
-        }
-
-        ImGui.End();
     }
 
     private void drawMods()
@@ -66,8 +39,6 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Button("Swap");
     }
 
-    public void Dispose() { }
-
     public override void Draw()
     {
         // can't ref a property, so use a local copy
@@ -78,5 +49,24 @@ public class ConfigWindow : Window, IDisposable
             // can save immediately on change, if you don't want to provide a "Save and Close" button
             this.Configuration.Save();
         }
+
+        if (ImGui.BeginTabBar("MarkerModTabs"))
+        {
+            if (ImGui.BeginTabItem("Modifications"))
+            {
+                drawMods();
+                ImGui.EndTabItem();
+            }
+
+            if (ImGui.BeginTabItem("Preferences"))
+            {
+                //DrawPreferences();
+                ImGui.EndTabItem();
+            }
+
+            ImGui.EndTabBar();
+        }
     }
+
+    public void Dispose() { }
 }

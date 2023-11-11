@@ -13,9 +13,9 @@ namespace ManageMarkers
     {
         public string Name => "just manage markers";
 
-        private DalamudPluginInterface PluginInterface { get; init; }
+        public DalamudPluginInterface PluginInterface { get; init; }
         private readonly PluginCommandManager<ManageMarkers> commandManager;
-        private IPluginLog log { get; init; }
+        public IPluginLog Log { get; init; }
         public Configuration Configuration { get; init; }
         public WindowSystem WindowSystem = new("ManageMarkers");
 
@@ -33,19 +33,19 @@ namespace ManageMarkers
         )]
         public void justManageMarkers(string command, string args)
         {
-            this.log.Info("/jmm used");
+            this.Log.Info("/justmarkers used");
 
             MainWindow.IsOpen = true;
         }
 
         public void justSwap(string command, string args)
         {
-            this.log.Info("/markerswap used");
+            this.Log.Info("/markerswap used");
 
             // Short circuit help message
             if (args.Trim() == "")
             {
-                this.log.Info("no args");
+                this.Log.Info("no args");
                 return;
             }
 
@@ -58,7 +58,7 @@ namespace ManageMarkers
             [RequiredVersion("1.0")] IPluginLog log
         )
         {
-            this.log = log;
+            this.Log = log;
             this.PluginInterface = pluginInterface;
 
             // Load all of our commands
@@ -74,6 +74,9 @@ namespace ManageMarkers
             ConfigWindow = new ConfigWindow(this);
             MainWindow = new MainWindow(this, goatImage);
 
+            WindowSystem.AddWindow(ConfigWindow);
+            WindowSystem.AddWindow(MainWindow);
+
             this.PluginInterface.UiBuilder.Draw += DrawUI;
             this.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
             this.PluginInterface.UiBuilder.OpenMainUi += DrawConfigUI;
@@ -86,11 +89,13 @@ namespace ManageMarkers
 
         public void DrawConfigUI()
         {
+            Log.Debug("Opening Config");
             ConfigWindow.IsOpen = true;
         }
 
         public void Dispose()
         {
+            Log.Debug("Cleaning up");
             this.WindowSystem.RemoveAllWindows();
 
             ConfigWindow.Dispose();
