@@ -1,0 +1,18 @@
+{
+    "Name": "just manage markers",
+    "Author": "zbee",
+    "Punchline": "A tool for making simple changes to waymarks.\n...And more complex changes, with powerful bulk waymark preset features.",
+    "Description": "This plugin requires the `Waymark Preset Plugin`.\n\nThis plugin seeks to simplify everything around waymarks down to the point that they're truly a tool again, and not ever in your way.\nIn this toolboox are the following utilities to make setting up and managing waymarks easier.\n- Swapping positions of individual marks\n- Swapping positions of letter and number marks\n- Square up marks (optionally with an anchor marker)\n- Re-orient marks to your preferred North\n- Generate boilerplate markers for new content\n- Adjusting set groups of markers around the arena\n- Picking a position to place a marker after combat is over",
+    "InternalName": "JustManageMarkers",
+    "ApplicableVersion": "any",
+    "RepoUrl": "https://github.com/zbee/manage_markers",
+    "IconUrl": "https://raw.githubusercontent.com/zbee/manage_markers/master/icon.png",
+    "Tags": [
+        "Waymark",
+        "Waymarks",
+        "Marker",
+        "Markers",
+        "Toolbox",
+        "Tool"
+    ]
+}
