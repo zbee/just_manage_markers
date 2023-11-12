@@ -4,6 +4,7 @@ using System.IO;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
 using JustManageMarkers.Attributes;
+using JustManageMarkers.Commands;
 using JustManageMarkers.Windows;
 
 namespace JustManageMarkers
@@ -14,6 +15,7 @@ namespace JustManageMarkers
 
         public DalamudPluginInterface PluginInterface { get; init; }
         private readonly PluginCommandManager<JustManageMarkers> commandManager;
+        private readonly Handler Commands;
         public IPluginLog Log { get; init; }
         public Configuration Configuration { get; init; }
         public WindowSystem WindowSystem = new("JustManageMarkers");
@@ -21,15 +23,15 @@ namespace JustManageMarkers
         private ConfigWindow ConfigWindow { get; init; }
         private MainWindow MainWindow { get; init; }
 
-        [Command("/justmarkers")]
-        [HelpMessage(
-            "Open the main window" +
-            "\n/justmarkers config \u2192 Open the config window" +
-            "\n " +
-            "\n/justmarkers help [chat] \u2192 Open the help window, or print it in chat" +
-            "\n/justmarkers advanced help [chat] \u2192 Open the advanced help window, or print it in chat" +
-            ""
-        )]
+        //[Command("/justmarkers")]
+        //[HelpMessage(
+        //    "Open the main window" +
+        //    "\n/justmarkers config \u2192 Open the config window" +
+        //    "\n " +
+        //    "\n/justmarkers help [chat] \u2192 Open the help window, or print it in chat" +
+        //    "\n/justmarkers advanced help [chat] \u2192 Open the advanced help window, or print it in chat" +
+        //    ""
+        //)]
         public void justManageMarkers(string command, string args)
         {
             this.Log.Info("/justmarkers used");
@@ -62,6 +64,7 @@ namespace JustManageMarkers
 
             // Load all of our commands
             this.commandManager = new PluginCommandManager<JustManageMarkers>(this, commandManager);
+            this.Commands = new Handler(this, commandManager);
 
             this.Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             this.Configuration.Initialize(this.PluginInterface);
