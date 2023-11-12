@@ -34,8 +34,6 @@ namespace JustManageMarkers
         {
             this.Log.Info("/justmarkers used");
 
-            WaymarkPresetPlugin;
-
             MainWindow.IsOpen = true;
         }
 
