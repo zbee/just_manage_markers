@@ -8,22 +8,19 @@ namespace JustManageMarkers.Commands;
 
 public class Handler : IDisposable
 {
-    private readonly JustManageMarkers plugin;
-    private ICommandManager commandManager;
+    private readonly JustManageMarkers _plugin;
 
     private const string ARROW = "\u2192";
 
-    private readonly List<Command> commands = new Commands().getCommands();
+    private readonly List<Command> _commands = new Commands().getCommands();
 
     private bool _actualCommandsSet = false;
     private List<string> _actualCommands = new();
     private List<string> _actualHelp = new();
 
-    public Handler(JustManageMarkers plugin, ICommandManager commandManager)
+    public Handler(JustManageMarkers plugin)
     {
-        this.plugin = plugin;
-        this.commandManager = commandManager;
-
+        this._plugin = plugin;
         this._actualCommands = this._getActualCommands();
         this._registerActualCommands();
     }
@@ -35,9 +32,9 @@ public class Handler : IDisposable
         bool foundCommand = false;
         Command commandToUse = default;
 
-        foreach (Command c in this.commands)
+        foreach (Command c in this._commands)
         {
-            if (commandString.StartsWith(c.Name + " "))
+            if (commandString.StartsWith(c.Name))
             {
                 foundCommand = true;
                 commandToUse = c;
@@ -47,17 +44,59 @@ public class Handler : IDisposable
         // Fail out if no command was found
         if (!foundCommand)
         {
-            this.plugin.Log.Info("command not found");
+            JustManageMarkers.Log.Info("command not found");
             return;
         }
 
-        this.plugin.Log.Info("command found!");
-        args = commandString.Replace(commandToUse.Name, "").Trim();
-        this.plugin.Log.Info(commandToUse.Name + ": " + args);
+        // Load up the exact arguments, and trim them
+        args = commandString.Replace(
+            commandToUse.Name,
+            ""
+        ).Trim();
 
-        this.plugin.Log.Info(JsonConvert.SerializeObject(commandToUse.Arguments));
+        // Fail out if the command doesn't accept arguments and has any
+        if (commandToUse.ArgumentParser == null && args != "")
+        {
+            JustManageMarkers.Log.Warning(
+                "This command does not accept arguments, please check the help command"
+            );
 
-        // TODO: Check arguments next
+            return;
+        }
+
+        // Run the handler with no arguments if the command doesn't accept arguments
+        if (commandToUse.Arguments == null || commandToUse.ArgumentParser == null)
+        {
+            commandToUse.Handler.Invoke(this._plugin);
+            return;
+        }
+
+        // Parse the arguments
+        ArgumentStruct arguments = default;
+        try
+        {
+            arguments = commandToUse.ArgumentParser(
+                this._plugin,
+                commandToUse.Arguments,
+                args
+            );
+        }
+        // Fail out if the arguments are invalid
+        catch (InvalidArgumentsException error)
+        {
+            JustManageMarkers.Log.Warning("Invalid arguments: " + error.Message);
+            JustManageMarkers.Log.Warning(
+                "This command's arguments were invalid, please check the help command"
+            );
+
+            return;
+        }
+
+        // Call the handler with the parsed arguments
+        commandToUse.Handler.Invoke(
+            this._plugin,
+            arguments
+        );
     }
 
     private string _getDalamudCommand(Command command)
@@ -83,7 +122,7 @@ public class Handler : IDisposable
         }
 
         // Loop over the commands
-        foreach (Command command in this.commands)
+        foreach (Command command in this._commands)
         {
             // Get the actual Dalamud command from each command
             string dalamudCommand = this._getDalamudCommand(command);
@@ -135,7 +174,7 @@ public class Handler : IDisposable
         foreach (string command in this._actualCommands)
         {
             // Register each command with Dalamud
-            this.commandManager.AddHandler(
+            JustManageMarkers.CommandManager.AddHandler(
                 command, // the /command
                 new CommandInfo(this.callHandler) // Always call the handler here to sort commands
                 {
@@ -153,7 +192,7 @@ public class Handler : IDisposable
     {
         foreach (string command in this._actualCommands)
         {
-            this.commandManager.RemoveHandler(command);
+            JustManageMarkers.CommandManager.RemoveHandler(command);
         }
     }
 
