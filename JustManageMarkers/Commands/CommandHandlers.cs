@@ -6,8 +6,11 @@ namespace JustManageMarkers.Commands;
 
 public class InvalidArgumentsException : Exception
 {
-    public InvalidArgumentsException(string message) : base(message)
+    public string Arguments { get; }
+
+    public InvalidArgumentsException(string arguments, string message = "") : base(message)
     {
+        this.Arguments = arguments;
     }
 }
 
@@ -21,6 +24,7 @@ public static class CommandHandlers
     )
     {
         plugin.drawMainUI();
+        JustManageMarkers.Chat.Print("test");
     }
 
     public static void justManageMarkersConfig(

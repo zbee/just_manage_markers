@@ -44,7 +44,10 @@ public class Handler : IDisposable
         // Fail out if no command was found
         if (!foundCommand)
         {
-            JustManageMarkers.Log.Info("command not found");
+            JustManageMarkers.Log.Info("Command not found: " + commandString);
+            JustManageMarkers.Chat.Print(
+                "This command was not recognized, please check the help command"
+            );
             return;
         }
 
@@ -57,7 +60,8 @@ public class Handler : IDisposable
         // Fail out if the command doesn't accept arguments and has any
         if (commandToUse.ArgumentParser == null && args != "")
         {
-            JustManageMarkers.Log.Warning(
+            JustManageMarkers.Log.Warning("No arguments accepted: " + commandToUse.Name);
+            JustManageMarkers.Chat.Print(
                 "This command does not accept arguments, please check the help command"
             );
 
@@ -84,10 +88,17 @@ public class Handler : IDisposable
         // Fail out if the arguments are invalid
         catch (InvalidArgumentsException error)
         {
-            JustManageMarkers.Log.Warning("Invalid arguments: " + error.Message);
-            JustManageMarkers.Log.Warning(
-                "This command's arguments were invalid, please check the help command"
-            );
+            JustManageMarkers.Log.Warning("Invalid arguments: " + error.Arguments);
+            if (error.Message != "")
+            {
+                JustManageMarkers.Log.Warning("Error message: " + error.Message);
+            }
+            else
+            {
+                JustManageMarkers.Chat.PrintError(
+                    "This command's arguments were invalid, please check the help command"
+                );
+            }
 
             return;
         }
