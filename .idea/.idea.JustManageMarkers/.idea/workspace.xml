@@ -10,16 +10,9 @@
     <list default="true" id="b5f3cc13-4ea0-41ef-86e7-b54a67eb5dcd" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/JustManageMarkers/Commands/CommandHandlers.cs" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/JustManageMarkers/Commands/StructArguments.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/.editorconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.JustManageMarkers/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.JustManageMarkers/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JustManageMarkers/Commands/Commands.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JustManageMarkers/Commands/Commands.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JustManageMarkers/Commands/Handler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JustManageMarkers/Commands/Handler.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JustManageMarkers/Commands/PluginCommandManager.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/JustManageMarkers/Commands/Struct.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JustManageMarkers/Commands/Struct.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JustManageMarkers/JustManageMarkers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JustManageMarkers/JustManageMarkers.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JustManageMarkers/JustManageMarkers.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/JustManageMarkers/JustManageMarkers.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JustManageMarkers/Windows/ConfigWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JustManageMarkers/Windows/ConfigWindow.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JustManageMarkers/Windows/MainWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JustManageMarkers/Windows/MainWindow.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +33,9 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d82c1e4798194978bf9872b50a0ee4121a3610/f5/9b3f6fff/IChatGui.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/53eb27476017b8c64dce59f122e55479737dedf3c292a2962455262f31e5/Version.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/JustManageMarkers/Commands/StructArguments.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pwnjo/RiderProjects/just_manage_markers/JustManageMarkers/JustManageMarkers.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pwnjo/RiderProjects/just_manage_markers/JustManageMarkers/Windows/ConfigWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pwnjo/RiderProjects/just_manage_markers/JustManageMarkers/Windows/MainWindow.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -95,7 +91,7 @@
       <updated>1699777812274</updated>
       <workItem from="1699777813761" duration="619000" />
       <workItem from="1699778479303" duration="18263000" />
-      <workItem from="1699823049245" duration="10227000" />
+      <workItem from="1699823049245" duration="10565000" />
     </task>
     <task id="LOCAL-00001" summary="Change Names">
       <option name="closed" value="true" />
@@ -137,7 +133,23 @@
       <option name="project" value="LOCAL" />
       <updated>1699797006657</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Simplify services injection">
+      <option name="closed" value="true" />
+      <created>1699833914407</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1699833914407</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Remove old command manger">
+      <option name="closed" value="true" />
+      <created>1699833986771</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1699833986771</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -152,6 +164,9 @@
     <MESSAGE value="Rename repo" />
     <MESSAGE value="Finish moving, add .idea back" />
     <MESSAGE value="Add initial setup of command handler" />
+    <MESSAGE value="Simplify services injection" />
+    <MESSAGE value="Remove old command manger" />
+    <option name="LAST_COMMIT_MESSAGE" value="Remove old command manger" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
