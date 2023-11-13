@@ -8,14 +8,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5f3cc13-4ea0-41ef-86e7-b54a67eb5dcd" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/JustManageMarkers/Commands/CommandHandlers.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/JustManageMarkers/Commands/StructArguments.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/.editorconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.JustManageMarkers/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.JustManageMarkers/.idea/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JustManageMarkers.sln.DotSettings" beforeDir="false" afterPath="$PROJECT_DIR$/JustManageMarkers.sln.DotSettings" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.JustManageMarkers/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.JustManageMarkers/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JustManageMarkers/Commands/Commands.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JustManageMarkers/Commands/Commands.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JustManageMarkers/Commands/Handler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JustManageMarkers/Commands/Handler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JustManageMarkers/Commands/PluginCommandManager.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/JustManageMarkers/Commands/Struct.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JustManageMarkers/Commands/Struct.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JustManageMarkers/JustManageMarkers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JustManageMarkers/JustManageMarkers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JustManageMarkers/JustManageMarkers.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/JustManageMarkers/JustManageMarkers.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JustManageMarkers/Windows/ConfigWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JustManageMarkers/Windows/ConfigWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JustManageMarkers/Windows/MainWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JustManageMarkers/Windows/MainWindow.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,8 +35,11 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock://C:/Users/Pwnjo/RiderProjects/just_manage_markers/JustManageMarkers/Commands/Commands.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Pwnjo/RiderProjects/just_manage_markers/JustManageMarkers/Commands/Commands.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d82c1e4798194978bf9872b50a0ee4121a3610/9f/2034c250/RequiredVersionAttribute.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d82c1e4798194978bf9872b50a0ee4121a3610/b1/4ca2bc02/ServiceContainer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d82c1e4798194978bf9872b50a0ee4121a3610/f5/9b3f6fff/IChatGui.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/53eb27476017b8c64dce59f122e55479737dedf3c292a2962455262f31e5/Version.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/JustManageMarkers/Commands/StructArguments.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -51,30 +58,30 @@
     <option name="showLibraryContents" value="true" />
     <option name="showScratchesAndConsoles" value="false" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.sourceCode",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "C:\\Users\\Pwnjo\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\DecompilerCache",
-      "C:\\Users\\Pwnjo\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\SourcesCache",
-      "C:\\Users\\Pwnjo\\AppData\\Local\\Symbols\\src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;C:\\Users\\Pwnjo\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\Pwnjo\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\Pwnjo\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RiderProblemsViewState">
     <option name="groupByToolId" value="true" />
   </component>
@@ -87,7 +94,8 @@
       <option name="presentableId" value="Default" />
       <updated>1699777812274</updated>
       <workItem from="1699777813761" duration="619000" />
-      <workItem from="1699778479303" duration="18185000" />
+      <workItem from="1699778479303" duration="18263000" />
+      <workItem from="1699823049245" duration="10227000" />
     </task>
     <task id="LOCAL-00001" summary="Change Names">
       <option name="closed" value="true" />
@@ -113,7 +121,23 @@
       <option name="project" value="LOCAL" />
       <updated>1699780906308</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Finish moving, add .idea back">
+      <option name="closed" value="true" />
+      <created>1699796971734</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1699796971734</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Add initial setup of command handler">
+      <option name="closed" value="true" />
+      <created>1699797006657</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1699797006657</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -126,6 +150,8 @@
     <MESSAGE value="Change Names" />
     <MESSAGE value="Change names" />
     <MESSAGE value="Rename repo" />
+    <MESSAGE value="Finish moving, add .idea back" />
+    <MESSAGE value="Add initial setup of command handler" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

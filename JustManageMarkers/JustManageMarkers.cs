@@ -3,90 +3,56 @@ using Dalamud.Plugin;
 using System.IO;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
-using JustManageMarkers.Attributes;
 using JustManageMarkers.Commands;
 using JustManageMarkers.Windows;
 
 namespace JustManageMarkers
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public sealed class JustManageMarkers : IDalamudPlugin
     {
-        public string Name => "just manage markers";
+        [PluginService] public static DalamudPluginInterface PluginInterface { get; private set; } = null!;
+        [PluginService] public static ICommandManager CommandManager { get; private set; } = null!;
+        [PluginService] public static IPluginLog Log { get; private set; } = null!;
+        [PluginService] public static IChatGui Chat { get; private set; } = null!;
 
-        public DalamudPluginInterface PluginInterface { get; init; }
-        private readonly PluginCommandManager<JustManageMarkers> commandManager;
-        private readonly Handler Commands;
-        public IPluginLog Log { get; init; }
-        public Configuration Configuration { get; init; }
+        public static string Name => "just manage markers";
         public WindowSystem WindowSystem = new("JustManageMarkers");
 
-        private ConfigWindow ConfigWindow { get; init; }
-        private MainWindow MainWindow { get; init; }
+        private readonly Handler _commands;
 
-        //[Command("/justmarkers")]
-        //[HelpMessage(
-        //    "Open the main window" +
-        //    "\n/justmarkers config \u2192 Open the config window" +
-        //    "\n " +
-        //    "\n/justmarkers help [chat] \u2192 Open the help window, or print it in chat" +
-        //    "\n/justmarkers advanced help [chat] \u2192 Open the advanced help window, or print it in chat" +
-        //    ""
-        //)]
-        public void justManageMarkers(string command, string args)
+        public Configuration Configuration { get; }
+
+        public ConfigWindow ConfigWindow { get; }
+        public MainWindow MainWindow { get; }
+
+        public JustManageMarkers()
         {
-            this.Log.Info("/justmarkers used");
-
-            MainWindow.IsOpen = true;
-        }
-
-        public void justSwap(string command, string args)
-        {
-            this.Log.Info("/markerswap used");
-
-            // Short circuit help message
-            if (args.Trim() == "")
-            {
-                this.Log.Info("no args");
-                return;
-            }
-
-            string[] markers = Markers.findMarkersIn(args);
-        }
-
-        public JustManageMarkers(
-            [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
-            [RequiredVersion("1.0")] ICommandManager commandManager,
-            [RequiredVersion("1.0")] IPluginLog log
-        )
-        {
-            this.Log = log;
-            this.PluginInterface = pluginInterface;
-
             // Load all of our commands
-            this.commandManager = new PluginCommandManager<JustManageMarkers>(this, commandManager);
-            this.Commands = new Handler(this, commandManager);
+            this._commands = new Handler(this);
 
-            this.Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-            this.Configuration.Initialize(this.PluginInterface);
-
-            // you might normally want to embed resources and load them from the manifest stream
-            var imagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "icon.png");
-            var goatImage = this.PluginInterface.UiBuilder.LoadImage(imagePath);
+            this.Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+            this.Configuration.Initialize(PluginInterface);
 
             ConfigWindow = new ConfigWindow(this);
-            MainWindow = new MainWindow(this, goatImage);
+            MainWindow = new MainWindow(this);
 
             WindowSystem.AddWindow(ConfigWindow);
             WindowSystem.AddWindow(MainWindow);
 
-            this.PluginInterface.UiBuilder.Draw += drawUI;
-            this.PluginInterface.UiBuilder.OpenConfigUi += drawConfigUI;
-            this.PluginInterface.UiBuilder.OpenMainUi += drawConfigUI;
+            PluginInterface.UiBuilder.Draw += drawUI;
+            PluginInterface.UiBuilder.OpenMainUi += drawMainUI;
+            PluginInterface.UiBuilder.OpenConfigUi += drawConfigUI;
         }
 
         private void drawUI()
         {
             this.WindowSystem.Draw();
+        }
+
+        public void drawMainUI()
+        {
+            MainWindow.IsOpen = true;
         }
 
         public void drawConfigUI()
@@ -98,9 +64,9 @@ namespace JustManageMarkers
         {
             this.WindowSystem.RemoveAllWindows();
 
+            this._commands.Dispose();
             ConfigWindow.Dispose();
             MainWindow.Dispose();
-            commandManager.Dispose();
         }
     }
 }

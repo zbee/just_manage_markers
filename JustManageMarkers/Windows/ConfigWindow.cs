@@ -16,7 +16,7 @@ public class ConfigWindow : Window, IDisposable
     private Configuration Configuration;
 
     public ConfigWindow(JustManageMarkers plugin) : base(
-        plugin.Name + ": preferences",
+        JustManageMarkers.Name + ": preferences",
         ImGuiWindowFlags.AlwaysAutoResize
     )
     {
