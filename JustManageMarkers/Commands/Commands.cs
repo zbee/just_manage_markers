@@ -9,9 +9,9 @@ public class Commands
 
     private readonly List<Command> _commands = new();
 
-    private static void UNIMPLEMENTED_COMMAND(
+    private static void UNIMPLEMENTED_COMMAND_HANDLER(
         JustManageMarkers plugin,
-        ArgumentStruct args = default
+        ArgumentStruct args
     )
     {
         throw new NotImplementedException();
@@ -19,8 +19,7 @@ public class Commands
 
     private static ArgumentStruct UNIMPLEMENTED_COMMAND_PARSER(
         JustManageMarkers plugin,
-        List<List<string>> acceptedArguments,
-        string args
+        ArgumentStruct arguments
     )
     {
         throw new NotImplementedException();
@@ -62,7 +61,7 @@ public class Commands
         this._commands.Add(
             new Command(
                 "/justmarkers help",
-                UNIMPLEMENTED_COMMAND,
+                UNIMPLEMENTED_COMMAND_HANDLER,
                 "Open the help window",
                 true,
                 true
@@ -72,7 +71,7 @@ public class Commands
         this._commands.Add(
             new Command(
                 "/justmarkers advanced help",
-                UNIMPLEMENTED_COMMAND,
+                UNIMPLEMENTED_COMMAND_HANDLER,
                 "Open the advanced help window"
             )
         );
@@ -83,7 +82,7 @@ public class Commands
         this._commands.Add(
             new Command(
                 "/justmarkers swap",
-                UNIMPLEMENTED_COMMAND,
+                UNIMPLEMENTED_COMMAND_HANDLER,
                 "Swap the positions of two markers, or marker types",
                 new List<List<string>>()
                 {
@@ -103,7 +102,7 @@ public class Commands
                         "<marker>",
                     },
                 },
-                UNIMPLEMENTED_COMMAND_PARSER,
+                CommandHandlers.swapArguments,
                 false
             )
         );
@@ -111,7 +110,7 @@ public class Commands
         this._commands.Add(
             new Command(
                 "/justmarkers swap help",
-                UNIMPLEMENTED_COMMAND,
+                UNIMPLEMENTED_COMMAND_HANDLER,
                 "Learn how to us the swap command",
                 false
             )

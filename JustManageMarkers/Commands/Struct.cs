@@ -14,9 +14,9 @@ public struct Command
     public bool IncludeInHelp { get; } = true;
 
 
-    public delegate void HandlerDelegate(JustManageMarkers plugin, ArgumentStruct args = default);
+    public delegate void HandlerDelegate(JustManageMarkers plugin, ArgumentStruct args);
 
-    public delegate ArgumentStruct ArgumentParserDelegate(JustManageMarkers plugin, List<List<string>> acceptedArguments, string args);
+    public delegate ArgumentStruct ArgumentParserDelegate(JustManageMarkers plugin, ArgumentStruct arguments);
 
 
     #region Constructors

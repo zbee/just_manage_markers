@@ -1,7 +1,5 @@
 ﻿using Dalamud.Game.Command;
-using Dalamud.Plugin.Services;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using System;
 
 namespace JustManageMarkers.Commands;
@@ -32,6 +30,8 @@ public class Handler : IDisposable
         bool foundCommand = false;
         Command commandToUse = default;
 
+        // TODO: Generate patterns to match against from the command name and arguments in `new Command()`
+        // Loop through each command and keep the last one that matches
         foreach (Command c in this._commands)
         {
             if (commandString.StartsWith(c.Name))
@@ -48,6 +48,7 @@ public class Handler : IDisposable
             JustManageMarkers.Chat.Print(
                 "This command was not recognized, please check the help command"
             );
+
             return;
         }
 
@@ -71,18 +72,24 @@ public class Handler : IDisposable
         // Run the handler with no arguments if the command doesn't accept arguments
         if (commandToUse.Arguments == null || commandToUse.ArgumentParser == null)
         {
-            commandToUse.Handler.Invoke(this._plugin);
+            var emptyArguments = new ArgumentStruct(null, null);
+            commandToUse.Handler.Invoke(this._plugin, emptyArguments);
             return;
         }
 
-        // Parse the arguments
-        ArgumentStruct arguments = default;
+        // Parse the arguments and call the handler with their return, catching an argument exception
         try
         {
-            arguments = commandToUse.ArgumentParser(
+            var arguments = new ArgumentStruct(commandToUse.Arguments, args);
+
+            commandToUse.ArgumentParser.Invoke(
                 this._plugin,
-                commandToUse.Arguments,
-                args
+                arguments
+            );
+
+            commandToUse.Handler.Invoke(
+                this._plugin,
+                arguments
             );
         }
         // Fail out if the arguments are invalid
@@ -102,12 +109,6 @@ public class Handler : IDisposable
 
             return;
         }
-
-        // Call the handler with the parsed arguments
-        commandToUse.Handler.Invoke(
-            this._plugin,
-            arguments
-        );
     }
 
     private string _getDalamudCommand(Command command)
