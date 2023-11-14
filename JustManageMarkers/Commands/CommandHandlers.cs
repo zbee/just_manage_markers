@@ -1,6 +1,7 @@
 ﻿#region Boilerplate
 
 using JustManageMarkers.Core;
+using JustManageMarkers.Functions;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -47,8 +48,6 @@ public static class CommandHandlers
         ArgumentStruct arguments
     )
     {
-        JustManageMarkers.Log.Info("Handling arguments for swap");
-
         // Fail out if an insufficient amount of arguments was provided
         if (arguments.Count != 2)
         {
@@ -84,5 +83,29 @@ public static class CommandHandlers
         }
 
         throw new InvalidArgumentsException(arguments.OriginalArguments);
+    }
+
+    public static void swap(
+        JustManageMarkers plugin,
+        ArgumentStruct arguments,
+        int parseResult
+    )
+    {
+        JustManageMarkers.Log.Info("Handling swap");
+
+        var swapFunctions = new Swap();
+
+        // Swap letter and number markers
+        if (parseResult == SWAP_TYPES)
+        {
+            swapFunctions.swapTypes();
+            return;
+        }
+
+        // Otherwise, swap the given markers
+        swapFunctions.swapMarks(
+            Markers.getMarkGiven(arguments.Argument1.Value!),
+            Markers.getMarkGiven(arguments.Argument2.Value!)
+        );
     }
 }

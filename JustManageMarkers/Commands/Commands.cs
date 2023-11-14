@@ -83,7 +83,7 @@ public class Commands
         this._commands.Add(
             new Command(
                 "/justmarkers swap",
-                UNIMPLEMENTED_COMMAND_HANDLER,
+                CommandHandlers.swap,
                 "Swap the positions of two markers, or marker types",
                 new List<List<string>>()
                 {
