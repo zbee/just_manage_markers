@@ -1,4 +1,5 @@
 ﻿using Dalamud.Game.Command;
+using JustManageMarkers.Core;
 using System.Collections.Generic;
 using System;
 
@@ -99,7 +100,9 @@ public class Handler : IDisposable
             JustManageMarkers.Log.Warning("Invalid arguments: " + error.Arguments);
             if (error.Message != "")
             {
-                JustManageMarkers.Log.Warning("Error message: " + error.Message);
+                JustManageMarkers.Chat.PrintError(
+                    error.Message
+                );
             }
             else
             {
@@ -107,6 +110,12 @@ public class Handler : IDisposable
                     "This command's arguments were invalid, please check the help command"
                 );
             }
+        }
+        catch (WaymarksNotConnectedException error)
+        {
+            JustManageMarkers.Chat.PrintError(
+                "Waymark Preset Plugin is not available, please ensure it is installed"
+            );
         }
     }
 
