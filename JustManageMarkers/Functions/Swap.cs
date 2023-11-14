@@ -16,7 +16,7 @@ public class Swap
         Marker markTwo
     )
     {
-        var waymarksPlugin = new WaymarkWrapper();
-        waymarksPlugin.debugAttemptingToAccessPlugin();
+        var waymarksAPI = new WaymarkPresetAPI();
+        waymarksAPI.debugAttemptingToAccessPlugin();
     }
 }
