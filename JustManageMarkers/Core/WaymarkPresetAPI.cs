@@ -37,7 +37,11 @@ public class WaymarkPresetAPI : IDisposable
     [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
     private Type? _waymarkPreset_MemoryHandler { get; set; }
 
-    #region Connection
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
+    private Type? _waymarkPreset_WaymarkPreset { get; set; }
+
+    #region Connecting to WaymarkPresetPlugin and making sure we can reflect into it
 
     public WaymarkPresetAPI()
     {
@@ -128,7 +132,7 @@ public class WaymarkPresetAPI : IDisposable
 
     #endregion
 
-    #region Loading
+    #region Loading classes from WaymarkPresetPlugin
 
     private void _loadPluginSymbols()
     {
@@ -191,36 +195,53 @@ public class WaymarkPresetAPI : IDisposable
 
     #region Call Wrappers
 
-    public void debugAttemptingToAccessPlugin()
+    public object createEmptyGamePreset()
     {
         this._checkConnection();
 
-        if (this._waymarkPreset_GamePreset == null)
-            throw new Exception("_waymarkPreset_GamePreset is not loaded");
-
-        if (this._waymarkPreset_MemoryHandler == null)
-            throw new Exception("_waymarkPreset_MemoryHandler is not loaded");
-
-        // Make an empty GamePreset to fill
-        var emptyPreset = this._waymarkPreset_GamePreset.Assembly.CreateInstance(
+        // Return a new instance of the GamePreset class
+        return this._waymarkPreset_GamePreset!.Assembly.CreateInstance(
             this._waymarkPreset_GamePreset.FullName!
         )!;
+    }
 
-        // Get the current waymarks and fill into a GamePreset
+    public object createEmptyWaymarkPreset()
+    {
+        this._checkConnection();
+
+        // Return a new instance of the GamePreset class
+        return this._waymarkPreset_WaymarkPreset!.Assembly.CreateInstance(
+            this._waymarkPreset_WaymarkPreset.FullName!
+        )!;
+    }
+
+    public object getWaymarkPresetAsGamePreset(object gamePreset)
+    {
+        this._checkConnection();
+
+        throw new NotImplementedException();
+    }
+
+    public bool getCurrentWaymarksAsPreset(ref object preset)
+    {
+        this._checkConnection();
+
         var argument = new object[]
         {
-            emptyPreset
+            preset
         };
-        this._waymarkPreset_MemoryHandler.GetMethod("GetCurrentWaymarksAsPresetData")!.Invoke(
-            this._waymarkPreset_GamePreset.FullName,
-            argument
-        );
-        var gamePreset = argument[0];
 
+        // Call te method
+        var result = this._waymarkPreset_MemoryHandler!
+            .GetMethod("GetCurrentWaymarksAsPresetData")!.Invoke(
+                this._waymarkPreset_MemoryHandler!.FullName,
+                argument
+            );
 
-        JustManageMarkers.Log.Info(
-            $"Current waymarks: {JsonConvert.SerializeObject(gamePreset, Formatting.Indented)}"
-        );
+        // Update the preset with the new waymarks
+        preset = argument[0];
+
+        return result != null;
     }
 
     # endregion
