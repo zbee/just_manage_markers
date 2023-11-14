@@ -111,7 +111,7 @@ public class Handler : IDisposable
                 );
             }
         }
-        catch (WaymarksNotConnectedException error)
+        catch (WaymarksNotConnectedException)
         {
             JustManageMarkers.Chat.PrintError(
                 "Waymark Preset Plugin is not available, please ensure it is installed"
