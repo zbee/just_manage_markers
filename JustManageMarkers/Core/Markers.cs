@@ -70,4 +70,15 @@ public class Markers
                         || marker.Index.ToString() == possibleMarkerString
         );
     }
+
+    public static Marker getMarkGiven(string markerString)
+    {
+        var textInfo = new CultureInfo("en-US", false).TextInfo;
+        markerString = textInfo.ToTitleCase(markerString.Trim());
+        return markers.Find(
+            (marker) => marker.Name == markerString
+                        || marker.ShortName == markerString
+                        || marker.Index.ToString() == markerString
+        );
+    }
 }
