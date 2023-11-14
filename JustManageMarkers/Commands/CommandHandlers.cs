@@ -1,6 +1,9 @@
 ﻿#region Boilerplate
 
+using JustManageMarkers.Core;
+using Newtonsoft.Json;
 using System;
+using System.Linq;
 
 namespace JustManageMarkers.Commands;
 
@@ -20,7 +23,8 @@ public static class CommandHandlers
 {
     public static void justManageMarkers(
         JustManageMarkers plugin,
-        ArgumentStruct _
+        ArgumentStruct _,
+        int __
     )
     {
         plugin.drawMainUI();
@@ -28,13 +32,17 @@ public static class CommandHandlers
 
     public static void justManageMarkersConfig(
         JustManageMarkers plugin,
-        ArgumentStruct _
+        ArgumentStruct _,
+        int __
     )
     {
         plugin.drawConfigUI();
     }
 
-    public static ArgumentStruct swapArguments(
+    private const int SWAP_TYPES = 0;
+    private const int SWAP_MARKS = 1;
+
+    public static int swapArguments(
         JustManageMarkers plugin,
         ArgumentStruct arguments
     )
@@ -50,13 +58,31 @@ public static class CommandHandlers
             );
         }
 
-        JustManageMarkers.Log.Debug(arguments.OriginalArguments + " (" + arguments.Count + ")");
-        JustManageMarkers.Log.Debug("1: " + arguments.Argument1);
-        JustManageMarkers.Log.Debug("2: " + arguments.Argument2);
-        JustManageMarkers.Log.Debug("3: " + arguments.Argument3);
-        JustManageMarkers.Log.Debug("4: " + arguments.Argument4);
-        JustManageMarkers.Log.Debug("5: " + arguments.Argument5);
+        JustManageMarkers.Log.Debug(arguments.OriginalArguments);
+        JustManageMarkers.Log.Debug(arguments.ToString());
+        JustManageMarkers.Log.Debug(
+            "accepts: " + JsonConvert.SerializeObject(arguments.AcceptedArguments)
+        );
 
-        return arguments;
+        // Check for exact arguments
+        if (arguments.AcceptedArguments.Any(
+                argumentVariation =>
+                    arguments.Argument1.Value == argumentVariation[0]
+                    && arguments.Argument2.Value == argumentVariation[1]
+            ))
+        {
+            return SWAP_TYPES;
+        }
+
+        // Handle variable arguments
+        var markOne = Markers.findMarkGiven(arguments.Argument1.Value!);
+        var markTwo = Markers.findMarkGiven(arguments.Argument2.Value!);
+        if (markOne != null
+            && markTwo != null)
+        {
+            return SWAP_MARKS;
+        }
+
+        throw new InvalidArgumentsException(arguments.OriginalArguments);
     }
 }

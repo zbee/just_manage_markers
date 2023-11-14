@@ -11,13 +11,14 @@ public class Commands
 
     private static void UNIMPLEMENTED_COMMAND_HANDLER(
         JustManageMarkers plugin,
-        ArgumentStruct args
+        ArgumentStruct args,
+        int parserResult
     )
     {
         throw new NotImplementedException();
     }
 
-    private static ArgumentStruct UNIMPLEMENTED_COMMAND_PARSER(
+    private static int UNIMPLEMENTED_COMMAND_PARSER(
         JustManageMarkers plugin,
         ArgumentStruct arguments
     )

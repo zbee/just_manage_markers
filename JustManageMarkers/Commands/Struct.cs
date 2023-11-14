@@ -14,9 +14,16 @@ public struct Command
     public bool IncludeInHelp { get; } = true;
 
 
-    public delegate void HandlerDelegate(JustManageMarkers plugin, ArgumentStruct args);
+    public delegate void HandlerDelegate(
+        JustManageMarkers plugin,
+        ArgumentStruct args,
+        int parserResult
+    );
 
-    public delegate ArgumentStruct ArgumentParserDelegate(JustManageMarkers plugin, ArgumentStruct arguments);
+    public delegate int ArgumentParserDelegate(
+        JustManageMarkers plugin,
+        ArgumentStruct arguments
+    );
 
 
     #region Constructors
@@ -30,7 +37,8 @@ public struct Command
         this.ShortDescription = shortDescription;
     }
 
-    public Command(string name,
+    public Command(
+        string name,
         HandlerDelegate handler,
         string shortDescription,
         bool includeInHelp
@@ -42,7 +50,8 @@ public struct Command
         this.IncludeInHelp = includeInHelp;
     }
 
-    public Command(string name,
+    public Command(
+        string name,
         HandlerDelegate handler,
         string shortDescription,
         bool spaceAbove,
@@ -60,7 +69,8 @@ public struct Command
 
     #region No arguments, with description
 
-    public Command(string name,
+    public Command(
+        string name,
         HandlerDelegate handler,
         string shortDescription,
         string description
@@ -72,7 +82,8 @@ public struct Command
         this.Description = description;
     }
 
-    public Command(string name,
+    public Command(
+        string name,
         HandlerDelegate handler,
         string shortDescription,
         string description,
@@ -86,7 +97,8 @@ public struct Command
         this.Description = description;
     }
 
-    public Command(string name,
+    public Command(
+        string name,
         HandlerDelegate handler,
         string shortDescription,
         string description,
@@ -106,7 +118,8 @@ public struct Command
 
     #region Arguments, no description
 
-    public Command(string name,
+    public Command(
+        string name,
         HandlerDelegate handler,
         string shortDescription,
         string description,
@@ -122,7 +135,8 @@ public struct Command
         this.ArgumentParser = argumentParser;
     }
 
-    public Command(string name,
+    public Command(
+        string name,
         HandlerDelegate handler,
         string shortDescription,
         string description,
@@ -140,7 +154,8 @@ public struct Command
         this.IncludeInHelp = includeInHelp;
     }
 
-    public Command(string name,
+    public Command(
+        string name,
         HandlerDelegate handler,
         string shortDescription,
         string description,
@@ -164,7 +179,8 @@ public struct Command
 
     #region Arguments, with description
 
-    public Command(string name,
+    public Command(
+        string name,
         HandlerDelegate handler,
         string shortDescription,
         List<List<string>> arguments,
@@ -178,7 +194,8 @@ public struct Command
         this.ArgumentParser = argumentParser;
     }
 
-    public Command(string name,
+    public Command(
+        string name,
         HandlerDelegate handler,
         string shortDescription,
         List<List<string>> arguments,
@@ -194,7 +211,8 @@ public struct Command
         this.IncludeInHelp = includeInHelp;
     }
 
-    public Command(string name,
+    public Command(
+        string name,
         HandlerDelegate handler,
         string shortDescription,
         List<List<string>> arguments,

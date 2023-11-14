@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace JustManageMarkers.Commands;
 
-public readonly struct Argument
+public struct Argument
 {
     public string? Value { get; }
     public bool IsPresent { get; }
@@ -21,7 +22,10 @@ public readonly struct Argument
 
     public override string ToString()
     {
-        return "'" + this.Value + "'";
+        var extra = "";
+        extra += this.StringArgument ? " (string)" : "";
+        extra += this.ListArgument ? " (list)" : "";
+        return this.Value + extra ?? "";
     }
 }
 
@@ -97,12 +101,14 @@ public partial class ArgumentStruct
             switch (argument)
             {
                 case BRACKETED_ARGUMENT:
-                    actualArgument = this._bracketedArguments[argumentNumber];
+                    actualArgument = this._bracketedArguments[0];
                     wasBracketed = true;
+                    this._bracketedArguments.RemoveAt(0);
                     break;
                 case QUOTED_ARGUMENT:
-                    actualArgument = this._quotedArguments[argumentNumber];
+                    actualArgument = this._quotedArguments[0];
                     wasQuoted = true;
+                    this._quotedArguments.RemoveAt(0);
                     break;
             }
 
@@ -147,7 +153,11 @@ public partial class ArgumentStruct
             arguments,
             match =>
             {
-                argumentList.Add(match.Value.Trim());
+                argumentList.Add(
+                    match.Value.Replace("\"", "")
+                        .Trim()
+                );
+
                 return QUOTED_ARGUMENT;
             }
         );
@@ -167,11 +177,30 @@ public partial class ArgumentStruct
             arguments,
             match =>
             {
-                argumentList.Add(match.Value.Trim());
+                argumentList.Add(
+                    match.Value.Replace("[", "")
+                        .Replace("]", "")
+                        .Trim()
+                );
+
                 return QUOTED_ARGUMENT;
             }
         );
 
         return (arguments, argumentList);
+    }
+
+    public override string ToString()
+    {
+        var arguments = new List<string>()
+        {
+            this.Argument1.ToString(),
+            this.Argument2.ToString(),
+            this.Argument3.ToString(),
+            this.Argument4.ToString(),
+            this.Argument5.ToString()
+        };
+
+        return JsonConvert.SerializeObject(arguments) + " (" + this.Count + ")";
     }
 }

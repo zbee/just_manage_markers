@@ -73,7 +73,7 @@ public class Handler : IDisposable
         if (commandToUse.Arguments == null || commandToUse.ArgumentParser == null)
         {
             var emptyArguments = new ArgumentStruct(null, null);
-            commandToUse.Handler.Invoke(this._plugin, emptyArguments);
+            commandToUse.Handler.Invoke(this._plugin, emptyArguments, 0);
             return;
         }
 
@@ -82,14 +82,15 @@ public class Handler : IDisposable
         {
             var arguments = new ArgumentStruct(commandToUse.Arguments, args);
 
-            commandToUse.ArgumentParser.Invoke(
+            var result = commandToUse.ArgumentParser.Invoke(
                 this._plugin,
                 arguments
             );
 
             commandToUse.Handler.Invoke(
                 this._plugin,
-                arguments
+                arguments,
+                result
             );
         }
         // Fail out if the arguments are invalid
@@ -106,8 +107,6 @@ public class Handler : IDisposable
                     "This command's arguments were invalid, please check the help command"
                 );
             }
-
-            return;
         }
     }
 
