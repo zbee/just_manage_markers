@@ -18,6 +18,9 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\ECommons\ECommons\ECommons.csproj" />
+        <Folder Include="Commands\"/>
+        <Folder Include="Core\"/>
         <Folder Include="Functions\"/>
         <Folder Include="Structures\"/>
         <Folder Include="Windows\"/>
