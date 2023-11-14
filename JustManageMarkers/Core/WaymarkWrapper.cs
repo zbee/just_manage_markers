@@ -29,8 +29,10 @@ public class WaymarkWrapper : IDisposable
 
     public WaymarkWrapper()
     {
+        // Default values
         this._waymarkPresetPlugin = null;
         this.Connected = false;
+        // Attempt to connect
         this._checkIPC();
     }
 

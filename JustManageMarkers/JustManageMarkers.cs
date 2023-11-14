@@ -1,8 +1,8 @@
 ﻿using Dalamud.IoC;
 using Dalamud.Plugin;
-using System.IO;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
+using ECommons;
 using JustManageMarkers.Commands;
 using JustManageMarkers.Windows;
 
@@ -11,7 +11,9 @@ namespace JustManageMarkers
     // ReSharper disable once ClassNeverInstantiated.Global
     public sealed class JustManageMarkers : IDalamudPlugin
     {
-        [PluginService] public static DalamudPluginInterface PluginInterface { get; private set; } = null!;
+        [PluginService]
+        public static DalamudPluginInterface PluginInterface { get; private set; } = null!;
+
         [PluginService] public static ICommandManager CommandManager { get; private set; } = null!;
         [PluginService] public static IPluginLog Log { get; private set; } = null!;
         [PluginService] public static IChatGui Chat { get; private set; } = null!;
@@ -31,18 +33,27 @@ namespace JustManageMarkers
             // Load all of our commands
             this._commands = new Handler(this);
 
-            this.Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+            // Load ECommons
+            ECommonsMain.Init(
+                PluginInterface,
+                this,
+                Module.DalamudReflector
+            );
+
+            // Load or create our config
+            this.Configuration = PluginInterface.GetPluginConfig() as Configuration
+                                 ?? new Configuration();
+
             this.Configuration.Initialize(PluginInterface);
 
-            ConfigWindow = new ConfigWindow(this);
-            MainWindow = new MainWindow(this);
-
-            WindowSystem.AddWindow(ConfigWindow);
-            WindowSystem.AddWindow(MainWindow);
-
-            PluginInterface.UiBuilder.Draw += drawUI;
-            PluginInterface.UiBuilder.OpenMainUi += drawMainUI;
-            PluginInterface.UiBuilder.OpenConfigUi += drawConfigUI;
+            // Setup our windows
+            this.ConfigWindow = new ConfigWindow(this);
+            this.MainWindow = new MainWindow(this);
+            this.WindowSystem.AddWindow(this.ConfigWindow);
+            this.WindowSystem.AddWindow(this.MainWindow);
+            PluginInterface.UiBuilder.Draw += this.drawUI;
+            PluginInterface.UiBuilder.OpenMainUi += this.drawMainUI;
+            PluginInterface.UiBuilder.OpenConfigUi += this.drawConfigUI;
         }
 
         private void drawUI()
@@ -65,6 +76,7 @@ namespace JustManageMarkers
             this.WindowSystem.RemoveAllWindows();
 
             this._commands.Dispose();
+            ECommonsMain.Dispose();
             ConfigWindow.Dispose();
             MainWindow.Dispose();
         }
