@@ -11,6 +11,7 @@ public class Swap
 {
     public void swapTypes()
     {
+        // TODO: call swap marks on letter and number marks, with some sort of groupBy on the mark colors
         throw new NotImplementedException();
     }
 
@@ -19,11 +20,17 @@ public class Swap
         Marker markTwo
     )
     {
+        JustManageMarkers.Log.Debug("Swapping");
+
         var waymarksAPI = new WaymarkPresetAPI();
 
         var gamePreset = waymarksAPI.createEmptyGamePreset();
         if (!waymarksAPI.getCurrentWaymarksAsPreset(ref gamePreset))
         {
+            JustManageMarkers.Log.Error(
+                "WaymarkPresetPlugin Failed to get current waymarks"
+            );
+
             JustManageMarkers.Chat.Print(
                 "Could not get current waymarks. Do you have any placed?"
             );
@@ -31,8 +38,8 @@ public class Swap
             return;
         }
 
-        JustManageMarkers.Log.Info(
-            $"test, hopefully current waymarks: {JsonConvert.SerializeObject(gamePreset, Formatting.Indented)}"
+        JustManageMarkers.Log.Debug(
+            $"Current waymarks: {JsonConvert.SerializeObject(gamePreset, Formatting.Indented)}"
         );
 
         var blank = new GamePresetPoint();

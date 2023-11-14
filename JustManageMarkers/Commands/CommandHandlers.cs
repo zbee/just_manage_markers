@@ -91,7 +91,7 @@ public static class CommandHandlers
         int parseResult
     )
     {
-        JustManageMarkers.Log.Info("Handling swap");
+        JustManageMarkers.Log.Debug("Handling swap");
 
         var swapFunctions = new Swap();
 
@@ -102,7 +102,7 @@ public static class CommandHandlers
             return;
         }
 
-        // Otherwise, swap the given markers
+        // Swap the given markers
         swapFunctions.swapMarks(
             Markers.getMarkGiven(arguments.Argument1.Value!),
             Markers.getMarkGiven(arguments.Argument2.Value!)
