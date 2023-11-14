@@ -1,6 +1,6 @@
 ﻿namespace JustManageMarkers.Windows;
 
-public class HelpWIndow
+public class HelpWindow
 {
     private string exstingText = "Open the main window" +
                                  "\n/justmarkers config \u2192 Open the config window" +

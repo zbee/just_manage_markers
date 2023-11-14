@@ -15,7 +15,7 @@ ij_visual_guides =
 ij_wrap_on_typing = false
 
 # Microsoft .NET properties
-csharp_new_line_before_members_in_object_initializers = false
+csharp_new_line_before_members_in_object_initializers = true
 csharp_preferred_modifier_order = private, public, protected, internal, new, abstract, virtual, static, override, readonly, sealed, extern, unsafe, volatile, async, file, required:suggestion
 csharp_space_after_cast = true
 csharp_style_prefer_utf8_string_literals = true:suggestion
@@ -152,6 +152,7 @@ resharper_fsharp_insert_final_newline = false
 resharper_html_insert_final_newline = false
 resharper_keep_existing_linebreaks = true
 resharper_keep_user_linebreaks = true
+resharper_max_initializer_elements_on_line = 1
 resharper_max_invocation_arguments_on_line = 2
 resharper_place_expr_property_on_single_line = true
 resharper_resx_insert_final_newline = false
