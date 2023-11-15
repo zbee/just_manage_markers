@@ -1,9 +1,10 @@
-﻿using Dalamud.IoC;
+﻿using Dalamud.Interface.Windowing;
+using Dalamud.IoC;
 using Dalamud.Plugin;
-using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
 using ECommons;
 using JustManageMarkers.Commands;
+using JustManageMarkers.Core;
 using JustManageMarkers.Windows;
 
 namespace JustManageMarkers
@@ -20,6 +21,7 @@ namespace JustManageMarkers
 
         public static string Name => "just manage markers";
         public WindowSystem WindowSystem = new("JustManageMarkers");
+        public static WaymarkPresetAPI WaymarkPresetAPI = null!;
 
         private readonly Handler _commands;
 
@@ -39,6 +41,9 @@ namespace JustManageMarkers
                 this,
                 Module.DalamudReflector
             );
+
+            //Load WaymarkPresetAPI
+            WaymarkPresetAPI = new WaymarkPresetAPI();
 
             // Load or create our config
             this.Configuration = PluginInterface.GetPluginConfig() as Configuration
