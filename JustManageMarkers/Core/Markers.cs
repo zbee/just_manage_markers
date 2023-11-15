@@ -67,7 +67,6 @@ public class Markers
         return markers.Find(
             (marker) => marker.Name == possibleMarkerString
                         || marker.ShortName == possibleMarkerString
-                        || marker.Index.ToString() == possibleMarkerString
         );
     }
 
@@ -78,7 +77,13 @@ public class Markers
         return markers.Find(
             (marker) => marker.Name == markerString
                         || marker.ShortName == markerString
-                        || marker.Index.ToString() == markerString
+        );
+    }
+
+    public static Marker getMarkGivenID(int markerID)
+    {
+        return markers.Find(
+            (marker) => marker.Index == markerID
         );
     }
 }
