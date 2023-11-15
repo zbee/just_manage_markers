@@ -2,6 +2,7 @@
 using JustManageMarkers.Core;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace JustManageMarkers.Commands;
 
@@ -24,22 +25,21 @@ public class Handler : IDisposable
         this._registerActualCommands();
     }
 
-    public void callHandler(string command, string args)
+    private void callHandler(string command, string args)
     {
-        string commandString = command.Trim() + " " + args.Trim();
+        var commandString = command.Trim() + " " + args.Trim();
+        JustManageMarkers.Log.Info("Command picked up: " + commandString);
 
-        bool foundCommand = false;
+        var foundCommand = false;
         Command commandToUse = default;
 
         // TODO: Generate patterns to match against from the command name and arguments in `new Command()`
         // Loop through each command and keep the last one that matches
-        foreach (Command c in this._commands)
+        var possibleCommands = this._commands.Where(c => commandString.StartsWith(c.Name));
+        foreach (var cmd in possibleCommands)
         {
-            if (commandString.StartsWith(c.Name))
-            {
-                foundCommand = true;
-                commandToUse = c;
-            }
+            foundCommand = true;
+            commandToUse = cmd;
         }
 
         // Fail out if no command was found
@@ -47,7 +47,8 @@ public class Handler : IDisposable
         {
             JustManageMarkers.Log.Info("Command not found: " + commandString);
             JustManageMarkers.Chat.Print(
-                "This command was not recognized, please check the help command"
+                "This command was not recognized, please check the help command",
+                JustManageMarkers.Name
             );
 
             return;
@@ -64,7 +65,8 @@ public class Handler : IDisposable
         {
             JustManageMarkers.Log.Warning("No arguments accepted: " + commandToUse.Name);
             JustManageMarkers.Chat.Print(
-                "This command does not accept arguments, please check the help command"
+                "This command does not accept arguments, please check the help command",
+                JustManageMarkers.Name
             );
 
             return;
@@ -74,7 +76,12 @@ public class Handler : IDisposable
         if (commandToUse.Arguments == null || commandToUse.ArgumentParser == null)
         {
             var emptyArguments = new ArgumentStruct(null, null);
-            commandToUse.Handler.Invoke(this._plugin, emptyArguments, 0);
+            commandToUse.Handler.Invoke(
+                this._plugin,
+                emptyArguments,
+                0
+            );
+
             return;
         }
 
@@ -101,20 +108,41 @@ public class Handler : IDisposable
             if (error.Message != "")
             {
                 JustManageMarkers.Chat.PrintError(
-                    error.Message
+                    error.Message,
+                    JustManageMarkers.Name
                 );
             }
             else
             {
                 JustManageMarkers.Chat.PrintError(
-                    "This command's arguments were invalid, please check the help command"
+                    "This command's arguments were invalid, please check the help command",
+                    JustManageMarkers.Name
                 );
             }
         }
         catch (WaymarksNotConnectedException)
         {
             JustManageMarkers.Chat.PrintError(
-                "Waymark Preset Plugin is not available, please ensure it is installed"
+                "Waymark Preset Plugin is not available, please ensure it is installed",
+                JustManageMarkers.Name
+            );
+        }
+        catch (Exception error)
+        {
+            JustManageMarkers.Log.Error("Unknown command error: " + error.Message);
+            if (error.StackTrace != null)
+            {
+                JustManageMarkers.Log.Error(error.StackTrace);
+            }
+
+            JustManageMarkers.Chat.PrintError(
+                "An error has occurred, the command could not complete.",
+                JustManageMarkers.Name
+            );
+
+            JustManageMarkers.Chat.Print(
+                "Please report the issue along with your logs.",
+                JustManageMarkers.Name
             );
         }
     }
