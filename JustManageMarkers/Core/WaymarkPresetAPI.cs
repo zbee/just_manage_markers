@@ -19,10 +19,11 @@ public class WaymarksNotConnectedException : Exception
 
 public class WaymarkPresetAPI : IDisposable
 {
-    private bool Connected { get; set; }
+    public bool Connected { get; private set; }
     private IDalamudPlugin? _waymarkPresetPlugin;
 
     private const string WAYMARK_PLUGIN_NAME = "WaymarkPresetPlugin";
+    public const string WAYMARK_PLUGIN_NAME_SPACED = "Waymark Preset Plugin";
     private const string WAYMARK_PLUGIN_SAFE_IPC = "GetPresetsForCurrentArea";
 
     // Prefix for private Type? fields below
@@ -52,25 +53,33 @@ public class WaymarkPresetAPI : IDisposable
         this._waymarkPresetPlugin = null;
         this.Connected = false;
         // Attempt to connect
-        this._checkIPC();
+        this.checkIPC();
     }
 
-    private void _checkIPC()
+    private static void _callIPC()
+    {
+        JustManageMarkers.PluginInterface
+            .GetIpcSubscriber<SortedDictionary<int, string>>(
+                $"{WAYMARK_PLUGIN_NAME}.{WAYMARK_PLUGIN_SAFE_IPC}"
+            )
+            .InvokeFunc();
+    }
+
+    public void checkIPC()
     {
         // Attempt to call a safe IPC to check if WaymarkPresetPlugin is loaded
         try
         {
-            JustManageMarkers.PluginInterface
-                .GetIpcSubscriber<SortedDictionary<int, string>>(
-                    $"{WAYMARK_PLUGIN_NAME}.{WAYMARK_PLUGIN_SAFE_IPC}"
-                )
-                .InvokeFunc();
+            _callIPC();
         }
         catch (Exception e)
         {
             // Failed to connect if WaymarkPresetPlugin's IPC is not callable
             JustManageMarkers.Log.Error($"Can't find {WAYMARK_PLUGIN_NAME} in IPC: {e.Message}");
-            return;
+            JustManageMarkers.NoWaymarksPluginWindow.IsOpen = true;
+            throw new WaymarksNotConnectedException(
+                $"Can't find {WAYMARK_PLUGIN_NAME} plugin: " + e.Message
+            );
         }
 
         // Only connect if WaymarkPresetPlugin's IPC is callable
@@ -87,7 +96,7 @@ public class WaymarkPresetAPI : IDisposable
                     WAYMARK_PLUGIN_NAME,
                     out var plugin,
                     false,
-                    true
+                    false
                 )
             )
             {
@@ -96,8 +105,9 @@ public class WaymarkPresetAPI : IDisposable
                 this.Connected = true;
 
                 // Subscribe to plugin changes to recheck if WaymarkPresetPlugin is loaded
-                DalamudReflector.RegisterOnInstalledPluginsChangedEvents(this._checkIPC);
+                DalamudReflector.RegisterOnInstalledPluginsChangedEvents(this.checkIPC);
 
+                JustManageMarkers.NoWaymarksPluginWindow.IsOpen = false;
                 JustManageMarkers.Log.Info($"Successfully connected to {WAYMARK_PLUGIN_NAME}.");
 
                 // Load WaymarkPresetPlugin's symbols
@@ -111,18 +121,37 @@ public class WaymarkPresetAPI : IDisposable
         catch (Exception e)
         {
             this._disconnect();
-            JustManageMarkers.Log.Error($"Can't find {WAYMARK_PLUGIN_NAME} plugin: " + e.Message);
+            JustManageMarkers.Log.Error(
+                $"Can't find {WAYMARK_PLUGIN_NAME} plugin: " + e.Message
+            );
+
             if (e.StackTrace != null)
             {
                 JustManageMarkers.Log.Error(e.StackTrace);
             }
+
+            JustManageMarkers.NoWaymarksPluginWindow.IsOpen = true;
+
+            throw new WaymarksNotConnectedException(
+                $"Can't find {WAYMARK_PLUGIN_NAME} plugin: " + e.Message
+            );
         }
     }
 
     private void _checkConnection()
     {
-        if (!this.Connected)
+        try
         {
+            _callIPC();
+            if (!this.Connected)
+            {
+                this._connect();
+            }
+        }
+        catch
+        {
+            this._disconnect();
+            JustManageMarkers.NoWaymarksPluginWindow.IsOpen = true;
             throw new WaymarksNotConnectedException();
         }
     }
@@ -333,7 +362,7 @@ public class WaymarkPresetAPI : IDisposable
 
             // Get the string value of the modified and current waymarks to check if blank
             var testIfModifiedBlank = this.gamePresetPointToString(
-                modifiedGamePreset[marker.Index]
+                modifiedMark
             );
 
             var testIfCurrentBlank = this.gamePresetPointToString(
@@ -388,6 +417,7 @@ public class WaymarkPresetAPI : IDisposable
 
     public void Dispose()
     {
+        JustManageMarkers.NoWaymarksPluginWindow.IsOpen = false;
         this._disconnect();
         GC.SuppressFinalize(this);
     }
