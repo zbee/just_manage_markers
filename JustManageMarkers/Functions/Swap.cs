@@ -1,31 +1,53 @@
 ﻿using JustManageMarkers.Core;
 using JustManageMarkers.Structures;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JustManageMarkers.Functions;
 
 public class Swap
 {
-    public void swapTypes()
+    public static void swapTypes()
     {
-        // TODO: call swap marks on letter and number marks, with some sort of groupBy on the mark colors
-        throw new NotImplementedException();
+        JustManageMarkers.Log.Debug("Swapping Types");
+
+        var marksByColor = Markers.markers.GroupBy(
+            mark => mark.Color
+        );
+
+        foreach (var colors in marksByColor.Select(colorGroup => colorGroup.ToList()))
+        {
+            swapMarks(
+                colors[0],
+                colors[1],
+                true
+            );
+        }
+
+        JustManageMarkers.Log.Info(
+            "Swapped types"
+        );
+
+        JustManageMarkers.Chat.Print(
+            "Swapped letters and numbers",
+            JustManageMarkers.Name
+        );
     }
 
-    public void swapMarks(
+    public static void swapMarks(
         Marker markOne,
-        Marker markTwo
+        Marker markTwo,
+        bool quiet = false
     )
     {
-        JustManageMarkers.Log.Debug("Swapping");
-
-        var waymarksAPI = new WaymarkPresetAPI();
+        JustManageMarkers.Log.Debug(
+            $"Swapping {markOne.ShortName} and {markTwo.ShortName}"
+        );
 
         // Fill a preset with current game waymarks
-        var gamePreset = waymarksAPI.createEmptyGamePreset();
-        if (!waymarksAPI.getCurrentWaymarksAsPreset(ref gamePreset))
+        var gamePreset = JustManageMarkers.WaymarkPresetAPI.createEmptyGamePreset();
+        if (!JustManageMarkers.WaymarkPresetAPI.getCurrentWaymarksAsPreset(ref gamePreset))
         {
             JustManageMarkers.Log.Error(
                 "WaymarkPresetPlugin Failed to get current waymarks"
@@ -46,7 +68,7 @@ public class Swap
         );
 
         // Build an empty list of waymarks
-        var blank = waymarksAPI.createEmptyGamePresetPoint();
+        var blank = JustManageMarkers.WaymarkPresetAPI.createEmptyGamePresetPoint();
         var modifiedWaymarks = new List<object>()
         {
             blank,
@@ -71,9 +93,10 @@ public class Swap
         modifiedWaymarks[markOne.Index] = waymarkTwo;
 
         // Create a new WaymarkPreset with the modified waymark values over the game's current marks
-        var swappedWaymarks = waymarksAPI.modifyCurrentWaymarkPresetWithPresetPoints(
-            modifiedWaymarks
-        );
+        var swappedWaymarks = JustManageMarkers.WaymarkPresetAPI
+            .modifyCurrentWaymarkPresetWithPresetPoints(
+                modifiedWaymarks
+            );
 
         JustManageMarkers.Log.Debug(
             "Current Waymarks: "
@@ -85,6 +108,16 @@ public class Swap
         // Place the new waymarks
         // TODO: if this is false, it works in duties but not the overworld
         // If I recall correctly: if it's true, it works in the overworld but with division issues (toggleable division by 1000?)
-        waymarksAPI.placeWaymarks(swappedWaymarks, false);
+        JustManageMarkers.WaymarkPresetAPI.placeWaymarks(swappedWaymarks, false);
+
+        JustManageMarkers.Log.Info(
+            $"Swapped {markOne.ShortName} and {markTwo.ShortName}"
+        );
+
+        if (!quiet)
+            JustManageMarkers.Chat.Print(
+                $"Swapped {markOne.ShortName} and {markTwo.ShortName}",
+                JustManageMarkers.Name
+            );
     }
 }
