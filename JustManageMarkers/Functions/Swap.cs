@@ -1,5 +1,4 @@
-﻿using FFXIVClientStructs.FFXIV.Client.UI.Misc;
-using JustManageMarkers.Core;
+﻿using JustManageMarkers.Core;
 using JustManageMarkers.Structures;
 using Newtonsoft.Json;
 using System;
@@ -24,6 +23,7 @@ public class Swap
 
         var waymarksAPI = new WaymarkPresetAPI();
 
+        // Fill a preset with current game waymarks
         var gamePreset = waymarksAPI.createEmptyGamePreset();
         if (!waymarksAPI.getCurrentWaymarksAsPreset(ref gamePreset))
         {
@@ -39,11 +39,15 @@ public class Swap
         }
 
         JustManageMarkers.Log.Debug(
-            $"Current waymarks: {JsonConvert.SerializeObject(gamePreset, Formatting.Indented)}"
+            "Current Waymarks: "
+            + JsonConvert.SerializeObject(
+                gamePreset
+            )
         );
 
-        var blank = new GamePresetPoint();
-        var modifiedWaymarks = new List<GamePresetPoint>()
+        // Build an empty list of waymarks
+        var blank = waymarksAPI.createEmptyGamePresetPoint();
+        var modifiedWaymarks = new List<object>()
         {
             blank,
             blank,
@@ -55,15 +59,32 @@ public class Swap
             blank,
         };
 
-        // Get the currently applicable waymarks
-        var waymarkOne = (GamePresetPoint) gamePreset.GetType()
+        // Get the currently applicable waymarks from the game's waymarks
+        var waymarkOne = gamePreset.GetType()
             .GetField(markOne.Name)!.GetValue(gamePreset)!;
 
-        var waymarkTwo = (GamePresetPoint) gamePreset.GetType()
+        var waymarkTwo = gamePreset.GetType()
             .GetField(markTwo.Name)!.GetValue(gamePreset)!;
 
         // Swap the values of the currently applicable waymarks
         modifiedWaymarks[markTwo.Index] = waymarkOne;
         modifiedWaymarks[markOne.Index] = waymarkTwo;
+
+        // Create a new WaymarkPreset with the modified waymark values over the game's current marks
+        var swappedWaymarks = waymarksAPI.modifyCurrentWaymarkPresetWithPresetPoints(
+            modifiedWaymarks
+        );
+
+        JustManageMarkers.Log.Debug(
+            "Current Waymarks: "
+            + JsonConvert.SerializeObject(
+                swappedWaymarks
+            )
+        );
+
+        // Place the new waymarks
+        // TODO: if this is false, it works in duties but not the overworld
+        // If I recall correctly: if it's true, it works in the overworld but with division issues (toggleable division by 1000?)
+        waymarksAPI.placeWaymarks(swappedWaymarks, false);
     }
 }
