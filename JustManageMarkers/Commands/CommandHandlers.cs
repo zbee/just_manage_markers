@@ -48,23 +48,35 @@ public static class CommandHandlers
         ArgumentStruct arguments
     )
     {
-        // Fail out if an insufficient amount of arguments was provided
-        if (arguments.Count != 2)
-        {
-            throw new InvalidArgumentsException(
-                arguments.OriginalArguments,
-                "You must provide exactly two arguments"
-            );
-        }
-
         JustManageMarkers.Log.Debug(arguments.OriginalArguments);
         JustManageMarkers.Log.Debug(arguments.ToString());
         JustManageMarkers.Log.Debug(
             "accepts: " + JsonConvert.SerializeObject(arguments.AcceptedArguments)
         );
 
+        if (arguments.Count == 1)
+        {
+            if (arguments.AcceptedArguments.Any(
+                    argumentVariation =>
+                        arguments.Argument1.Value == argumentVariation[0]
+                        || arguments.Argument1.Value == argumentVariation[1]
+                ))
+            {
+                return SWAP_TYPES;
+            }
+        }
+
+        // Fail out if an insufficient amount of arguments provided for remaining argument checks
+        if (arguments.Count != 2)
+        {
+            throw new InvalidArgumentsException(
+                arguments.OriginalArguments,
+                "You must provide two arguments to swap"
+            );
+        }
+
         // Check for exact arguments
-        if (arguments.AcceptedArguments.Any(
+        if (arguments.AcceptedArguments.Where(x => x.Count > 1).Any(
                 argumentVariation =>
                     arguments.Argument1.Value == argumentVariation[0]
                     && arguments.Argument2.Value == argumentVariation[1]
@@ -98,12 +110,12 @@ public static class CommandHandlers
         // Swap letter and number markers
         if (parseResult == SWAP_TYPES)
         {
-            swapFunctions.swapTypes();
+            Swap.swapTypes();
             return;
         }
 
         // Swap the given markers
-        swapFunctions.swapMarks(
+        Swap.swapMarks(
             Markers.getMarkGiven(arguments.Argument1.Value!),
             Markers.getMarkGiven(arguments.Argument2.Value!)
         );

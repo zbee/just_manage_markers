@@ -90,6 +90,14 @@ public class Commands
                     new List<string>()
                     {
                         "letters",
+                    },
+                    new List<string>()
+                    {
+                        "numbers",
+                    },
+                    new List<string>()
+                    {
+                        "letters",
                         "numbers",
                     },
                     new List<string>()
