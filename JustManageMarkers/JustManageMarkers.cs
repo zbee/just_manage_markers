@@ -6,6 +6,7 @@ using ECommons;
 using JustManageMarkers.Commands;
 using JustManageMarkers.Core;
 using JustManageMarkers.Windows;
+using System.Threading;
 
 namespace JustManageMarkers
 {
@@ -27,8 +28,12 @@ namespace JustManageMarkers
 
         public Configuration Configuration { get; }
 
-        public ConfigWindow ConfigWindow { get; }
         public MainWindow MainWindow { get; }
+        public ConfigWindow ConfigWindow { get; }
+        public static NoWaymarksPluginWindow NoWaymarksPluginWindow { get; set; }
+
+        private CancellationTokenSource _cancellationTokenSource = new();
+        public CancellationToken CancelToken { get; private set; }
 
         public JustManageMarkers()
         {
@@ -42,9 +47,6 @@ namespace JustManageMarkers
                 Module.DalamudReflector
             );
 
-            //Load WaymarkPresetAPI
-            WaymarkPresetAPI = new WaymarkPresetAPI();
-
             // Load or create our config
             this.Configuration = PluginInterface.GetPluginConfig() as Configuration
                                  ?? new Configuration();
@@ -52,13 +54,25 @@ namespace JustManageMarkers
             this.Configuration.Initialize(PluginInterface);
 
             // Setup our windows
-            this.ConfigWindow = new ConfigWindow(this);
             this.MainWindow = new MainWindow(this);
-            this.WindowSystem.AddWindow(this.ConfigWindow);
+            this.ConfigWindow = new ConfigWindow(this);
+            NoWaymarksPluginWindow = new NoWaymarksPluginWindow(this);
             this.WindowSystem.AddWindow(this.MainWindow);
+            this.WindowSystem.AddWindow(this.ConfigWindow);
+            this.WindowSystem.AddWindow(NoWaymarksPluginWindow);
             PluginInterface.UiBuilder.Draw += this.drawUI;
             PluginInterface.UiBuilder.OpenMainUi += this.drawMainUI;
             PluginInterface.UiBuilder.OpenConfigUi += this.drawConfigUI;
+
+            //Load WaymarkPresetAPI
+            try
+            {
+                WaymarkPresetAPI = new WaymarkPresetAPI();
+            }
+            catch (WaymarksNotConnectedException)
+            {
+                NoWaymarksPluginWindow.IsOpen = true;
+            }
         }
 
         private void drawUI()
@@ -68,22 +82,25 @@ namespace JustManageMarkers
 
         public void drawMainUI()
         {
-            MainWindow.IsOpen = true;
+            this.MainWindow.IsOpen = true;
         }
 
         public void drawConfigUI()
         {
-            ConfigWindow.IsOpen = true;
+            this.ConfigWindow.IsOpen = true;
         }
 
         public void Dispose()
         {
+            this.ConfigWindow.Dispose();
+            this.MainWindow.Dispose();
+            NoWaymarksPluginWindow.Dispose();
+
             this.WindowSystem.RemoveAllWindows();
 
             this._commands.Dispose();
             ECommonsMain.Dispose();
-            ConfigWindow.Dispose();
-            MainWindow.Dispose();
+            WaymarkPresetAPI.Dispose();
         }
     }
 }
