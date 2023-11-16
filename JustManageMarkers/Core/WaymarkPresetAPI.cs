@@ -24,7 +24,7 @@ public class WaymarkPresetAPI : IDisposable
     private IDalamudPlugin? _waymarkPresetPlugin;
 
     private readonly EzFrameworkUpdate _connectionChecker;
-    private const int CONNECTION_CHECKER_INTERVAL = 100; // 1 to 2 seconds
+    private const int CONNECTION_CHECKER_INTERVAL = 200; // 2 to 3 seconds
     private int _connectionCheckerIntervalMarker { get; set; } = 0;
 
     private const string WAYMARK_PLUGIN_NAME = "WaymarkPresetPlugin";
@@ -68,7 +68,7 @@ public class WaymarkPresetAPI : IDisposable
         }
 
         // Watch for changes to connection state
-        this._connectionChecker = new EzFrameworkUpdate(new Action(this.recheckConnection));
+        this._connectionChecker = new EzFrameworkUpdate(new Action(this._recheckConnection));
     }
 
     private static void _callIPC()
@@ -171,21 +171,19 @@ public class WaymarkPresetAPI : IDisposable
         }
     }
 
-    private bool readyForRecheck()
+    private bool _readyForRecheck()
     {
         return this._connectionCheckerIntervalMarker % CONNECTION_CHECKER_INTERVAL == 0;
     }
 
-    private void recheckConnection()
+    private void _recheckConnection()
     {
         this._connectionCheckerIntervalMarker += 1;
 
-        if (!this.readyForRecheck())
+        if (!this._readyForRecheck())
         {
             return;
         }
-
-        JustManageMarkers.Log.Verbose($"Checking connection to {WAYMARK_PLUGIN_NAME}...");
 
         this._checkConnection(true);
     }
@@ -451,6 +449,7 @@ public class WaymarkPresetAPI : IDisposable
 
     public void Dispose()
     {
+        this._connectionChecker.Dispose();
         JustManageMarkers.NoWaymarksPluginWindow.IsOpen = false;
         this._disconnect();
         GC.SuppressFinalize(this);

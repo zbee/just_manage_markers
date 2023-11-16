@@ -47,6 +47,7 @@ public class NoWaymarksPluginWindow : Window, IDisposable
 
         ImGui.Spacing();
         ImGui.Spacing();
+        ImGui.Spacing();
         this.centerText("(This window will close when it is detected)");
         ImGui.Spacing();
     }

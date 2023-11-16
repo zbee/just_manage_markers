@@ -87,8 +87,6 @@ namespace JustManageMarkers
 
         public void Dispose()
         {
-            ECommonsMain.Dispose();
-
             this.ConfigWindow.Dispose();
             this.MainWindow.Dispose();
             NoWaymarksPluginWindow.Dispose();
@@ -97,6 +95,7 @@ namespace JustManageMarkers
 
             this._commands.Dispose();
             WaymarkPresetAPI.Dispose();
+            ECommonsMain.Dispose();
         }
     }
 }
