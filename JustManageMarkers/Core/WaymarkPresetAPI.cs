@@ -1,4 +1,5 @@
 ﻿using Dalamud.Plugin;
+using ECommons.EzEventManager;
 using ECommons.Reflection;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,10 @@ public class WaymarkPresetAPI : IDisposable
 {
     public bool Connected { get; private set; }
     private IDalamudPlugin? _waymarkPresetPlugin;
+
+    private readonly EzFrameworkUpdate _connectionChecker;
+    private const int CONNECTION_CHECKER_INTERVAL = 100; // 1 to 2 seconds
+    private int _connectionCheckerIntervalMarker { get; set; } = 0;
 
     private const string WAYMARK_PLUGIN_NAME = "WaymarkPresetPlugin";
     public const string WAYMARK_PLUGIN_NAME_SPACED = "Waymark Preset Plugin";
@@ -53,7 +58,17 @@ public class WaymarkPresetAPI : IDisposable
         this._waymarkPresetPlugin = null;
         this.Connected = false;
         // Attempt to connect
-        this.checkIPC();
+        try
+        {
+            this.checkIPC();
+        }
+        catch
+        {
+            /* ignore */
+        }
+
+        // Watch for changes to connection state
+        this._connectionChecker = new EzFrameworkUpdate(new Action(this.recheckConnection));
     }
 
     private static void _callIPC()
@@ -138,7 +153,7 @@ public class WaymarkPresetAPI : IDisposable
         }
     }
 
-    private void _checkConnection()
+    private void _checkConnection(bool silent = false)
     {
         try
         {
@@ -152,8 +167,27 @@ public class WaymarkPresetAPI : IDisposable
         {
             this._disconnect();
             JustManageMarkers.NoWaymarksPluginWindow.IsOpen = true;
-            throw new WaymarksNotConnectedException();
+            if (!silent) throw new WaymarksNotConnectedException();
         }
+    }
+
+    private bool readyForRecheck()
+    {
+        return this._connectionCheckerIntervalMarker % CONNECTION_CHECKER_INTERVAL == 0;
+    }
+
+    private void recheckConnection()
+    {
+        this._connectionCheckerIntervalMarker += 1;
+
+        if (!this.readyForRecheck())
+        {
+            return;
+        }
+
+        JustManageMarkers.Log.Verbose($"Checking connection to {WAYMARK_PLUGIN_NAME}...");
+
+        this._checkConnection(true);
     }
 
     private void _disconnect()

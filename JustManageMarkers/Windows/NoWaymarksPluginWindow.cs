@@ -1,4 +1,5 @@
-﻿using Dalamud.Interface.Windowing;
+﻿using Dalamud.Interface.Colors;
+using Dalamud.Interface.Windowing;
 using ImGuiNET;
 using JustManageMarkers.Core;
 using System;
@@ -15,7 +16,12 @@ public class NoWaymarksPluginWindow : Window, IDisposable
 
     public NoWaymarksPluginWindow(JustManageMarkers plugin) : base(
         $"Missing {WaymarkPresetAPI.WAYMARK_PLUGIN_NAME_SPACED}",
-        ImGuiWindowFlags.AlwaysAutoResize
+        ImGuiWindowFlags.NoTitleBar
+        | ImGuiWindowFlags.NoMove
+        | ImGuiWindowFlags.AlwaysAutoResize
+        | ImGuiWindowFlags.NoResize
+        | ImGuiWindowFlags.NoScrollWithMouse
+        | ImGuiWindowFlags.NoScrollbar
     )
     {
         this.Plugin = plugin;
@@ -33,26 +39,20 @@ public class NoWaymarksPluginWindow : Window, IDisposable
         this.centerText($"Please install it to use {pluginName}.");
         ImGui.Spacing();
         ImGui.Spacing();
+        ImGui.PushStyleColor(ImGuiCol.Button, ImGuiColors.ParsedGrey);
         if (ImGui.Button("Open Installer", new Vector2(275, 25)))
             JustManageMarkers.CommandManager.ProcessCommand("/xlplugins");
 
-        ImGui.Spacing();
-        if (ImGui.Button("Check Again", new Vector2(275, 25)))
-        {
-            try
-            {
-                JustManageMarkers.WaymarkPresetAPI.checkIPC();
-                if (JustManageMarkers.WaymarkPresetAPI.Connected)
-                    this.IsOpen = false;
-            }
-            catch (Exception e)
-            {
-                JustManageMarkers.Log.Error(e.Message);
-            }
-        }
+        ImGui.PopStyleColor();
 
         ImGui.Spacing();
+        ImGui.Spacing();
+        this.centerText("(This window will close when it is detected)");
+        ImGui.Spacing();
+    }
 
+    public override void PostDraw()
+    {
         this.centerWindow();
     }
 
