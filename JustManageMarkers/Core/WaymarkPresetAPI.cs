@@ -25,13 +25,14 @@ public class WaymarkPresetAPI : IDisposable
 
     private readonly EzFrameworkUpdate _connectionChecker;
     private const int CONNECTION_CHECKER_INTERVAL = 200; // 2 to 3 seconds
-    private int _connectionCheckerIntervalMarker { get; set; } = 0;
+    private const int CONNECTION_CHECKER_INITIAL_DELAY = 500; // 5 to 8 seconds
+    public int _connectionCheckerIntervalMarker { get; set; } = 0;
 
     private const string WAYMARK_PLUGIN_NAME = "WaymarkPresetPlugin";
     public const string WAYMARK_PLUGIN_NAME_SPACED = "Waymark Preset Plugin";
     private const string WAYMARK_PLUGIN_SAFE_IPC = "GetPresetsForCurrentArea";
 
-    // Prefix for private Type? fields below
+    // Prefix for private `Type?` fields below
     private const string WAYMARK_PRESET_PLUGIN_DESIRED_CLASSES_PREFIX = "_waymarkPreset_";
 
     [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -91,7 +92,6 @@ public class WaymarkPresetAPI : IDisposable
         {
             // Failed to connect if WaymarkPresetPlugin's IPC is not callable
             JustManageMarkers.Log.Error($"Can't find {WAYMARK_PLUGIN_NAME} in IPC: {e.Message}");
-            JustManageMarkers.NoWaymarksPluginWindow.IsOpen = true;
             throw new WaymarksNotConnectedException(
                 $"Can't find {WAYMARK_PLUGIN_NAME} plugin: " + e.Message
             );
@@ -173,6 +173,11 @@ public class WaymarkPresetAPI : IDisposable
 
     private bool _readyForRecheck()
     {
+        if (this._connectionCheckerIntervalMarker < CONNECTION_CHECKER_INITIAL_DELAY)
+        {
+            return false;
+        }
+
         return this._connectionCheckerIntervalMarker % CONNECTION_CHECKER_INTERVAL == 0;
     }
 
