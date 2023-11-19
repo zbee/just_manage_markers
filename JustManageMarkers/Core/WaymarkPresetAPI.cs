@@ -51,7 +51,7 @@ public class WaymarkPresetAPI : IDisposable
     [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
     private Type? _waymarkPreset_WaymarkPreset { get; set; }
 
-    #region Connecting to WaymarkPresetPlugin and making sure we can reflect into it
+    #region Connecting to WaymarkPresetPlugin
 
     public WaymarkPresetAPI()
     {
@@ -124,6 +124,7 @@ public class WaymarkPresetAPI : IDisposable
 
                 JustManageMarkers.NoWaymarksPluginWindow.IsOpen = false;
                 JustManageMarkers.Log.Info($"Successfully connected to {WAYMARK_PLUGIN_NAME}.");
+                this._connectionCheckerIntervalMarker = 0;
 
                 // Load WaymarkPresetPlugin's symbols
                 this._loadPluginSymbols();
