@@ -1,6 +1,6 @@
-﻿using Dalamud.Interface.Colors;
-using Dalamud.Interface.Windowing;
+﻿using Dalamud.Interface.Windowing;
 using ImGuiNET;
+using JustManageMarkers.CommonGUI;
 using JustManageMarkers.Core;
 using JustManageMarkers.Functions;
 using System;
@@ -13,8 +13,13 @@ namespace JustManageMarkers.Windows;
 
 public class MainWindow : Window, IDisposable
 {
-    private int waymarkOne;
-    private int waymarkTwo = 4;
+    private int _swapWaymarkOne;
+    private int _swapWaymarkTwo = 4;
+    private int _squareMark;
+    private int _squareAnchorMark;
+    private int _squareType;
+    private int _squareTypeType;
+    private int _squareTypeAnchor;
 
     private JustManageMarkers Plugin;
 
@@ -32,84 +37,224 @@ public class MainWindow : Window, IDisposable
 
     public override void Draw()
     {
-        this.drawMods();
+        new Spacing(height: 10).draw();
+
+        this.drawSwap();
+
+        new Separator(width: 75).draw();
+
+        if (ImGui.CollapsingHeader("Squaring up markers"))
+            this.drawSquare();
+
+        new Spacing(height: 5).draw();
+
+        if (ImGui.CollapsingHeader("Fitting markers to your preferences"))
+            this.drawFit();
+
+        new Spacing(height: 5).draw();
+
+        if (ImGui.CollapsingHeader("Basics"))
+            this.drawBasics();
+
+        new Spacing(height: 5).draw();
+
+        if (ImGui.CollapsingHeader("Adjusting markers"))
+            this.drawAdjust();
+
+        new Spacing(height: 10).draw();
 
         this.centerWindow();
         this.PositionCondition = ImGuiCond.FirstUseEver;
     }
 
-    private void drawMods()
+    private void drawSwap()
     {
-        ImGui.Spacing();
-        ImGui.Spacing();
-        ImGui.Spacing();
+        new Text("Swap position of two markers", centered: true).draw();
 
-        this.centerText("Swap position of two markers");
+        new Group(
+            true,
+            null,
+            new Combo(
+                "Waymark to Swap 1",
+                Markers.markers.Select(x => x.Name),
+                width: 75
+            ),
+            new Button(
+                "Swap Two Marks",
+                "\u2190 Swap \u2192",
+                callback: () => Swap.swapMarks(
+                    Markers.getMarkGivenID(this._swapWaymarkOne),
+                    Markers.getMarkGivenID(this._swapWaymarkTwo)
+                )
+            ),
+            new Combo(
+                "Waymark to Swap 2",
+                Markers.markers.Select(x => x.Name),
+                width: 75
+            )
+        ).draw(ref this._swapWaymarkOne, ref this._swapWaymarkTwo);
 
-        ImGui.SetNextItemWidth(75);
-        ImGui.PushID("SwapWaymarkOne");
-        ImGui.Combo(
-            "",
-            ref waymarkOne,
-            Markers.markers.Select(x => x.Name).ToArray(),
-            Markers.markers.Count
-        );
+        new Spacing(height: 5).draw();
 
-        ImGui.PopID();
+        new Text("Swap positions of letter and number markers", centered: true).draw();
 
-        ImGui.PushID("SwapTwoWaymarks");
-        ImGui.SameLine();
-        ImGui.PushStyleColor(ImGuiCol.Button, ImGuiColors.ParsedGrey);
-        if (ImGui.Button("\u2190 Swap \u2192"))
-            Swap.swapMarks(
-                Markers.getMarkGivenID(this.waymarkOne),
-                Markers.getMarkGivenID(this.waymarkTwo)
-            );
-
-        ImGui.PopStyleColor(1);
-        ImGui.PopID();
-
-        ImGui.SameLine();
-
-        ImGui.SetNextItemWidth(75);
-        ImGui.PushID("SwapWaymarkTwo");
-        ImGui.Combo(
-            "",
-            ref waymarkTwo,
-            Markers.markers.Select(x => x.Name).ToArray(),
-            Markers.markers.Count
-        );
-
-        ImGui.PopID();
-
-        ImGui.Spacing();
-        ImGui.Spacing();
-        ImGui.Spacing();
-
-
-        this.centerText("Swap positions of letter and number markers");
-
-        ImGui.PushID("SwapWaymarkTypes");
-        ImGui.PushStyleColor(ImGuiCol.Button, ImGuiColors.ParsedGrey);
-        if (ImGui.Button("ABCD \u2190 Swap \u2192 1234", new Vector2(235, 20)))
-            Swap.swapTypes();
-
-        ImGui.PopStyleColor(1);
-        ImGui.PopID();
+        new Button(
+            "Swap Types of Marks",
+            "ABCD \u2190 Swap \u2192 1234",
+            callback: Swap.swapTypes,
+            width: -1
+        ).draw();
     }
 
-    #region OtterGUI's text centering
-
-    // https://github.com/Ottermandias/OtterGui/blob/b09bbcc276363bc994d90b641871e6280898b6e5/Util.cs#L461
-
-    private void centerText(string text)
+    private void drawSquare()
     {
-        var offset = (ImGui.GetContentRegionAvail().X - ImGui.CalcTextSize(text).X) / 2;
-        ImGui.SetCursorPosX(ImGui.GetCursorPosX() + offset);
-        ImGui.TextUnformatted(text);
+        new Text("Square one mark with those in 'line' with it", centered: true).draw();
+
+        new Group(
+            true,
+            null,
+            new Spacing(width: 30, height: 1),
+            new Combo(
+                "one mark to square",
+                Markers.markers.Select(x => x.Name),
+                label: "",
+                width: 65
+            ),
+            new Button(
+                "Square one mark",
+                "[square one]",
+                width: 90
+            )
+        ).draw(ref this._squareMark);
+
+        new Spacing(height: 5).draw();
+
+        new Text("Square up all markers with center", centered: true).draw();
+
+        new Button(
+            "Square All Marks",
+            "[square all]",
+            callback: Swap.swapTypes,
+            width: -1
+        ).draw();
+
+        new Spacing(height: 5).draw();
+
+        new Text("Square up all markers based off of an anchor", centered: true).draw();
+
+        new Group(
+            true,
+            null,
+            new Spacing(width: 1, height: 1),
+            new Text("Anchor:"),
+            new Combo(
+                "Waymark to Anchor to",
+                Markers.markers.Select(x => x.Name),
+                label: "",
+                width: 65
+            ),
+            new Button(
+                "Square with Anchor",
+                "[square all to]",
+                width: 90
+            )
+        ).draw(ref this._squareAnchorMark);
+
+        new Spacing(height: 5).draw();
+
+        new Text("Square up a type of marker", centered: true).draw();
+
+        new Group(
+            true,
+            null,
+            new Spacing(width: 5, height: 1),
+            new Text("Type:"),
+            new Combo(
+                "type to square",
+                new[]
+                {
+                    "Letter",
+                    "Number"
+                },
+                label: "",
+                width: 65
+            ),
+            new Button(
+                "Square type",
+                "[square some]",
+                width: 90
+            )
+        ).draw(ref this._squareType);
+
+        new Spacing(height: 5).draw();
+
+        new Text("Square up a type of marker to an anchor", centered: true).draw();
+
+        new Group(
+            true,
+            null,
+            new Group(
+                false,
+                "2x int",
+                new Group(
+                    true,
+                    "int",
+                    new Text("Type:      "),
+                    new Combo(
+                        "Waymark Type to Square with anchor",
+                        new[]
+                        {
+                            "Letter",
+                            "Number"
+                        },
+                        label: "",
+                        width: 75
+                    )
+                ),
+                new Group(
+                    true,
+                    "int",
+                    new Text("Anchor:"),
+                    new Combo(
+                        "Waymark to Square type to",
+                        Markers.markers.Select(x => x.Name),
+                        label: "",
+                        width: 75
+                    )
+                )
+            ),
+            new Group(
+                false,
+                null,
+                new Spacing(width: 1, height: 5),
+                new Button(
+                    "Square with Type",
+                    "[square some to]"
+                )
+            )
+        ).draw(ref this._squareTypeType, ref this._squareTypeAnchor);
+
+        new Separator(width: 75).draw();
     }
 
-    #endregion
+    private void drawFit()
+    {
+        new Text("Not implemented yet", centered: true).draw();
+
+        new Separator(width: 75).draw();
+    }
+
+    private void drawBasics()
+    {
+        new Text("Not implemented yet", centered: true).draw();
+
+        new Separator(width: 75).draw();
+    }
+
+    private void drawAdjust()
+    {
+        new Text("Not implemented yet", centered: true).draw();
+    }
 
     #region Defile's window centering
 

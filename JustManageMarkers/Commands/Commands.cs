@@ -33,6 +33,7 @@ public class Commands
     {
         this._addBaseCommands();
         this._addSwapCommand();
+        this._addSquareCommand();
 
         #region Boilerplate
 
@@ -121,6 +122,64 @@ public class Commands
                 "/justmarkers swap help",
                 UNIMPLEMENTED_COMMAND_HANDLER,
                 "Learn how to us the swap command",
+                false
+            )
+        );
+    }
+
+    private void _addSquareCommand()
+    {
+        this._commands.Add(
+            new Command(
+                "/justmarkers square",
+                CommandHandlers.swap,
+                "Square up markers to the center, optionally also to an anchor marker",
+                new List<List<string>>()
+                {
+                    new List<string>()
+                    {
+                        "", // Line up all markers with center
+                    },
+                    new List<string>()
+                    {
+                        "letters", // Line up letter markers with center
+                    },
+                    new List<string>()
+                    {
+                        "numbers", // Line up number markers with center
+                    },
+                    new List<string>()
+                    {
+                        "<marker>", // Line up marker with markers it's roughly in line with
+                    },
+                    new List<string>()
+                    {
+                        "to",
+                        "<marker>", // Line up all markers with center and based off of an anchor marker
+                    },
+                    new List<string>()
+                    {
+                        "letters",
+                        "to",
+                        "<marker>", // Line up all letters with center and based off of an anchor marker
+                    },
+                    new List<string>()
+                    {
+                        "numbers",
+                        "to",
+                        "<marker>", // Line up all numbers with center and based off of an anchor marker
+                    },
+                },
+                CommandHandlers.swapArguments,
+                false
+            )
+        );
+
+        this._commands.Add(
+            new Command(
+                "/justmarkers square help",
+                UNIMPLEMENTED_COMMAND_HANDLER,
+                "Learn how to us the square command",
                 false
             )
         );
