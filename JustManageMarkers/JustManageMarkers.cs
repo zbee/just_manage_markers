@@ -56,9 +56,9 @@ namespace JustManageMarkers
             this.Configuration.Initialize(PluginInterface);
 
             // Setup our windows
-            this.MainWindow = new MainWindow(this);
-            this.ConfigWindow = new ConfigWindow(this);
-            NoWaymarksPluginWindow = new NoWaymarksPluginWindow(this);
+            this.MainWindow = new MainWindow();
+            this.ConfigWindow = new ConfigWindow();
+            NoWaymarksPluginWindow = new NoWaymarksPluginWindow();
             this._windowSystem.AddWindow(this.MainWindow);
             this._windowSystem.AddWindow(this.ConfigWindow);
             this._windowSystem.AddWindow(NoWaymarksPluginWindow);

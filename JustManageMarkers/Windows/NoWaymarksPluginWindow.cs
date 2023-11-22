@@ -12,9 +12,7 @@ namespace JustManageMarkers.Windows;
 
 public class NoWaymarksPluginWindow : Window, IDisposable
 {
-    private JustManageMarkers Plugin;
-
-    public NoWaymarksPluginWindow(JustManageMarkers plugin) : base(
+    public NoWaymarksPluginWindow() : base(
         $"Missing {WaymarkPresetAPI.WAYMARK_PLUGIN_NAME_SPACED}",
         ImGuiWindowFlags.NoTitleBar
         | ImGuiWindowFlags.NoMove
@@ -24,7 +22,6 @@ public class NoWaymarksPluginWindow : Window, IDisposable
         | ImGuiWindowFlags.NoScrollbar
     )
     {
-        this.Plugin = plugin;
     }
 
     public override void Draw()
@@ -55,6 +52,7 @@ public class NoWaymarksPluginWindow : Window, IDisposable
     public override void PostDraw()
     {
         this.centerWindow();
+        this.PositionCondition = ImGuiCond.Appearing;
     }
 
     #region OtterGUI's text centering

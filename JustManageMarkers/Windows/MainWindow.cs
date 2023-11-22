@@ -21,18 +21,14 @@ public class MainWindow : Window, IDisposable
     private int _squareTypeType;
     private int _squareTypeAnchor;
 
-    private JustManageMarkers Plugin;
-
-    public MainWindow(JustManageMarkers plugin) : base(
+    public MainWindow() : base(
         JustManageMarkers.Name,
         ImGuiWindowFlags.NoResize
         | ImGuiWindowFlags.NoScrollbar
         | ImGuiWindowFlags.NoScrollWithMouse
     )
     {
-        this.Size = new Vector2(280, 200);
-
-        this.Plugin = plugin;
+        this.Size = new Vector2(280, -1);
     }
 
     public override void Draw()
