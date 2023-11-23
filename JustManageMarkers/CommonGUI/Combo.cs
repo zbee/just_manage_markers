@@ -14,7 +14,7 @@ public ref struct ComboSelection
 public class Combo : IguiElement, IbackgroundableElement, IsizeableElement
 {
     public string? wantsReference { get; set; } = "Int";
-    public string _id { get; set; }
+    public string? _id { get; set; }
 
     public Vector4? _backgroundColor { get; set; }
     public int _width { get; set; }

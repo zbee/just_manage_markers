@@ -10,7 +10,7 @@ public class Button : IguiElement, IsizeableElement, IbackgroundableElement,
     IcolorableElement, IonClickableElement
 {
     public string? wantsReference { get; set; } = null;
-    public string _id { get; set; }
+    public string? _id { get; set; }
     public string _label { get; set; }
     public int _width { get; set; }
     public int _height { get; set; }
@@ -42,7 +42,7 @@ public class Button : IguiElement, IsizeableElement, IbackgroundableElement,
     public void draw()
     {
         ImGui.PushID(this._id);
-        ImGui.PushStyleColor(ImGuiCol.Button, (Vector4) this._backgroundColor);
+        ImGui.PushStyleColor(ImGuiCol.Button, (Vector4) this._backgroundColor!);
 
         var size = Vector2.Zero;
         if (this._width != 0 || this._height != 0)

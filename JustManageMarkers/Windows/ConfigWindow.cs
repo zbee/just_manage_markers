@@ -12,8 +12,6 @@ public class ConfigWindow : Window, IDisposable
     public int waymarkOne;
     public int waymarkTwo = 4;
 
-    private Configuration Configuration;
-
     public ConfigWindow() : base(
         JustManageMarkers.Name + ": preferences",
         ImGuiWindowFlags.AlwaysAutoResize
